@@ -1,0 +1,20 @@
+.form {
+  margin: 0 auto;
+  width: 25vw;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field__label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form__submit {
+  height: 56px;
+}
