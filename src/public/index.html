@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="src/public/main.css">
+  </head>
+  <body class="content">
+  <h1 class="title">Form data:</h1>
+
+  <div class="body">
+    <form
+      class="body__form"
+      style=""
+      action="/send"
+      method="post"
+    >
+      <div class="body__form-item">
+        <label for="date">Date:</label>
+        <input required id="date" name="date" type="date">
+      </div>
+
+      <div class="body__form-item">
+        <label for="title">Title:</label>
+        <input required id="title" name="title" type="text">
+      </div>
+
+      <div class="body__form-item">
+        <label for="amount">Amount:</label>
+        <input required id="amount" name="amount" type="number">
+      </div>
+
+      <button class="body__form-submit" type="submit">Send</button>
+    </form>
+  </div>
+
+  <a href="/expense">Get all expenses</a>
+  </body>
+</html>
