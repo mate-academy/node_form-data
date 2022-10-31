@@ -1,0 +1,34 @@
+{
+    "expense": [
+        {
+            "date": "2022-10-22",
+            "title": "car",
+            "amount": "10000"
+        },
+        {
+            "date": "2022-10-23",
+            "title": "carrot",
+            "amount": "12"
+        },
+        {
+            "date": "2022-09-15",
+            "title": "iphone",
+            "amount": "1500"
+        },
+        {
+            "date": "2022-09-19",
+            "title": "laptop",
+            "amount": "2500"
+        },
+        {
+            "date": "2022-09-19",
+            "title": "cap",
+            "amount": "69"
+        },
+        {
+            "date": "2022-10-29",
+            "title": "cat",
+            "amount": "33"
+        }
+    ]
+}
