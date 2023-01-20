@@ -1,19 +1,4 @@
 {
   "expenses": [
-    {
-      "date": "2022-10-22",
-      "title": "car",
-      "amount": "10000"
-    },
-    {
-      "date": "0011-11-11",
-      "title": "11",
-      "amount": "11"
-    },
-    {
-      "date": "0011-11-11",
-      "title": "111fdsfdsfdsfdfdsfas",
-      "amount": "111111"
-    }
   ]
 }
