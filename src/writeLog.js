@@ -15,6 +15,12 @@ function writeLog(
     </tr>
   `;
 
+  const expense = {
+    title,
+    amount,
+    date,
+  };
+
   if (fs.existsSync('./public/spendingsLog.html')) {
     fs.appendFileSync('./public/spendingsLog.html', tableRow);
   } else {
@@ -22,6 +28,12 @@ function writeLog(
     const table = tableTemplate + tableRow;
 
     fs.writeFileSync('./public/spendingsLog.html', table);
+  }
+
+  if (fs.existsSync('./public/JSON_log.json')) {
+    fs.appendFileSync('./public/JSON_log.json', JSON.stringify(expense));
+  } else {
+    fs.writeFileSync('./public/spendingsLog.html', JSON.stringify(expense));
   }
 }
 

@@ -11,9 +11,9 @@ const server = new http.Server();
 
 server.on('request', (req, res) => {
   const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
-  const pathName = normalizedUrl.pathname.slice(1);
+  const pathName = normalizedUrl.pathname.slice(1) || 'index.html';
 
-  if (pathName === '' || pathName === 'index.html') {
+  if (pathName === 'index.html') {
     const file = fs.createReadStream('public/index.html');
 
     res.setHeader('Content-Type', 'text/html');
