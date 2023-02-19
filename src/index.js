@@ -98,8 +98,8 @@ server.on('request', (req, res) => {
           <tbody>
             <tr>
               <td>${title}</td>
-              <td>${date}</td>
               <td>${amount}</td>
+              <td>${date}</td>
             </tr>
           </tbody>
         </table>
