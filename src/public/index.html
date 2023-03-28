@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+
+        height: 100vh;
+        width: 100vw;
+        background-image:
+          radial-gradient(circle farthest-corner at center, #e25644, #7e7cf9);
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+
+      }
+
+      .data-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 350px;
+        gap: 40px;
+      }
+
+      .form {
+        padding: 24px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        border: 1px solid lightgray;
+        border-radius: 12px;
+        background-color: #fff;
+
+        height: 302px;
+      }
+
+      label {
+        font-size: 14px;
+        color: grey;
+      }
+
+      input {
+        font-size: 16px;
+        margin-top: 8px;
+        width: 140px;
+        padding: 8px;
+        border: 1px solid lightblue;
+        border-radius: 8px;
+
+        transition: 100ms all linear;
+      }
+
+      input:focus {
+        outline: 1px solid green;
+      }
+
+      .button {
+        align-self: center;
+        display: flex;
+        height: 36px;
+        width: 200px;
+        border-radius: 8px;
+        background-color: lightskyblue;
+        border: none;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+
+
+      table {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        text-align: left;
+        padding: 24px;
+        width: 650px;
+        background-color: #fff;
+        height: 100%;
+        border-radius: 12px;
+      }
+    </style>
+
+    <title>Form Data App</title>
+  </head>
+  <body>
+    <div class="data-container">
+      <form action="/form" method="post" class="form">
+        <label>
+          Date:
+          <br>
+          <input type="date" name="date">
+        </label>
+
+        <label>
+          Category:
+          <br>
+          <input type="text" name="category">
+        </label>
+
+        <label>
+          Amount:
+          <br>
+          <input type="number" name="amount">
+        </label>
+
+        <button class="button" type="submit">Add expense</button>
+      </form>
+    </div>
+  </body>
+</html>
