@@ -10,13 +10,13 @@ const updateJSON = (newData) => {
     dataFromJSON = JSON.parse(inputJSON.toString());
     dataFromJSON.expenses.push(newData);
 
-    const outputJSON = JSON.stringify(dataFromJSON);
+    const outputJSON = JSON.stringify(dataFromJSON, null, 2);
 
     fs.writeFileSync('src/public/expenses.json', outputJSON);
 
     return outputJSON;
-  } catch {
-    console.log('Oops, something went wrong')
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
 
