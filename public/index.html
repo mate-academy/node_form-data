@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<style>
+  .form {
+    margin: 30px;
+  }
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    max-width: 350px;
+    min-width: 260px;
+    height: 100px;
+    border: #0d1d26 2px solid;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .field {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+</style>
+<body>
+  <form action="http://localhost:8080/api" method="post" class="form">
+    <section class="form-wrapper">
+      <label class="field" >
+        Date
+        <input type="date" value="2010-10-07" name="date">
+      </label >
+      <label class="field" >
+        Title
+        <input type="text" value="Obama" name="title">
+      </label>
+      <label class="field" >
+        Amount
+        <input type="number" value="1927" name="amount">
+      </label>
+    </section>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
