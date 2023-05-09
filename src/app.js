@@ -2,74 +2,61 @@
 
 const http = require('http');
 const fs = require('fs');
+const formidable = require('formidable');
+
+const handleIndex = (req, res) => {
+  const fileStream = fs.createReadStream('./public/index.html');
+
+  fileStream.pipe(res);
+
+  fileStream.on('end', () => {
+    // eslint-disable-next-line no-console
+    console.log('Completed');
+  });
+
+  fileStream.on('error', () => {
+    res.statusCode = 500;
+    res.end('Server error');
+  });
+};
+
+const handleUpload = (req, res) => {
+  const form = formidable({ string: 'utf-8' });
+
+  form.parse(req, (err, fields) => {
+    if (err) {
+      res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+      res.end(String(err));
+
+      return;
+    }
+
+    const writeStream = fs.createWriteStream('./src/result.json');
+
+    writeStream.write(JSON.stringify(fields));
+
+    writeStream.on('error', () => {
+      res.statusCode = 500;
+      res.end('Server error');
+    });
+
+    res.end(`
+      <main>
+        <h3>Date - ${fields.date}</h3>
+        <h3>Title - ${fields.title}</h3>
+        <h3>Amount - ${fields.amount}</h3>
+      </main>
+  `);
+  });
+};
 
 const server = http.createServer((req, res) => {
   res.setHeader('Content-type', 'text/html');
 
-  let date = '';
-  let title = '';
-  let amount = 0;
-  let body = '';
-
-  if (req.url === '/getJSON') {
-    req.on('data', (chunk) => {
-      body += chunk;
-    });
-
-    req.on('end', () => {
-      const parts = body.split('&');
-      const jsonObject = {};
-
-      for (const part of parts) {
-        const value = part.slice(part.indexOf('=') + 1);
-
-        switch (true) {
-          case part.includes('date'):
-            date = value;
-            jsonObject.date = value;
-            break;
-          case part.includes('title'):
-            title = value.replace('+', ' ');
-            jsonObject.title = value.replace('+', ' ');
-            break;
-          case part.includes('amount'):
-            amount = value;
-            jsonObject.amount = value;
-            break;
-        }
-      }
-
-      const writeStream = fs.createWriteStream('./src/result.json');
-
-      writeStream.write(JSON.stringify(jsonObject));
-
-      writeStream.on('error', () => {
-        res.statusCode = 500;
-        res.end('Server error');
-      });
-
-      res.end(`
-        <main>
-          <h3>Date - ${date}</h3>
-          <h3>Title - ${title}</h3>
-          <h3>Amount - ${amount}</h3>
-        </main>
-    `);
-    });
+  if (req.url === '/getJSON' && req.method === 'POST') {
+    handleUpload(req, res);
   } else {
-    const fileStream = fs.createReadStream('./public/index.html');
-
-    fileStream.pipe(res);
-
-    fileStream.on('end', () => {
-      // eslint-disable-next-line no-console
-      console.log('Completed');
-    });
-
-    fileStream.on('error', () => {
-      res.statusCode = 500;
-      res.end('Server error');
-    });
+    handleIndex(req, res);
   }
 });
 
