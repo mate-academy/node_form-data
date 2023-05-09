@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta name='theme-color' content='#000000' />
+
+    <link rel='stylesheet' href='./main.css' />
+
+    <title>Form data app</title>
+  </head>
+  <body>
+    <form class='data-form' action='http://localhost:3000/getJSON' method='POST'>
+      <div class='data-form_item'>
+        <label for='date'> Date </label>
+        <input type='date' name='date' id='date' />
+      </div>
+
+      <div class='data-form_item'>
+        <label for='title'> Title </label>
+        <input type='text' name='title' id='title'/>
+      </div>
+
+      <div class='data-form_item'>
+        <label for='amount'> Amount </label>
+        <input type='number' name='amount' />
+      </div>
+
+      <button type='submit' class='data-form_item data-form_button'>
+        Send
+      </button>
+    </form>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- <script defer src='./index.js'></script> -->
+  </body>
+</html>
