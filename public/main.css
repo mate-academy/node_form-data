@@ -1,0 +1,20 @@
+.data-form {
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 300px;
+}
+
+.data-form_item {
+  margin-bottom: 10px;
+}
+
+.data-form_button {
+  width: 100px;
+}
+
+.data-form_button:hover {
+  cursor: pointer;
+}
