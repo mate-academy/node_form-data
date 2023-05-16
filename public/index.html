@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Expense</title>
+</head>
+<body>
+  <style>
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 300px;
+      margin: 0 auto;
+      font-family: Arial, sans-serif;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    label span {
+      width: 100px;
+      font-size: 16px;
+    }
+
+    input[type="date"],
+    input[type="text"],
+    input[type="number"] {
+      flex-grow: 1;
+      padding: 5px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #0077cc;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+  <form action="/upload" enctype="multipart/form-data" method="POST">
+    <label>
+      <span>Date</span>
+      <input type="date" name="date"/>
+    </label>
+    <label>
+      <span>Title</span>
+      <input type="text" name="title"/>
+    </label>
+    <label>
+      <span>Amount</span>
+      <input type="number" name="amount"/>
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
