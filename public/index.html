@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Data</title>
+  </head>
+  <body>
+    <form action="/download" method="POST" enctype="multipart/form-data">
+      <label for="date">
+        Select data:
+        <input id="date" type="date" name="date"/>
+      </label>
+
+      <label for="name">
+        Enter your name:
+        <input id="name" type="text" name="name"/>
+      </label>
+
+      <label for="sum">
+        Enter your sum:
+        <input id="sum" type="number" name="sum"/>
+      </label>
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
