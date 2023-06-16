@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compression App</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Expense info</h1>
+
+  <form method="POST" action="/data" enctype="multipart/form-data">
+    <label>
+      Date:
+
+      <input type="date" name="date" value="2023-06-07" required>
+    </label>
+
+    <label>
+      Title:
+
+      <input type="text" name="title" value="example" required>
+    </label>
+
+    <label>
+      Amount:
+
+      <input type="number" name="amount" value="45" required>
+    </label>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
