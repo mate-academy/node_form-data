@@ -3,6 +3,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const multiparty = require('multiparty');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
@@ -24,14 +25,12 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.url === '/data') {
-    const multiparty = require('multiparty');
-
     const form = new multiparty.Form();
 
     form.parse(req, (err, fields) => {
       if (err) {
         res.statusCode = 404;
-        res.end('Error', err);
+        res.end('Error');
 
         return;
       }
@@ -47,7 +46,7 @@ const server = http.createServer((req, res) => {
       fs.readFile(pathToJSON, 'utf8', (errorRead, jsonData) => {
         if (errorRead) {
           res.statusCode = 404;
-          res.end('Can not read file', errorRead);
+          res.end('Can not read file');
 
           return;
         }
@@ -65,7 +64,7 @@ const server = http.createServer((req, res) => {
         fs.writeFile(pathToJSON, newData, (errWrite) => {
           if (errWrite) {
             res.statusCode = 404;
-            res.end('Can not write file', errWrite);
+            res.end('Can not write file');
 
             return;
           }
