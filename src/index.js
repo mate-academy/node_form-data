@@ -3,7 +3,7 @@
 
 const http = require('http');
 const fs = require('fs');
-const { formidable } = require('formidable');
+const formidable = require('formidable');
 
 const PORT = 3030;
 
@@ -29,7 +29,7 @@ const server = http.createServer(async(req, res) => {
     };
 
     const parseToJson = JSON.stringify(expenseData);
-    const createPath = `src/expenses/history-${fields.date[0]}.txt`;
+    const createPath = `src/expenses/history-${fields.date[0]}.json`;
 
     const streamHistory = fs.createWriteStream(
       createPath, { encoding: 'utf8' });
