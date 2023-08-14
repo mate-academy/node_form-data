@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <title>Form data</title>
+</head>
+<body>
+
+  <div class="container is-max-desktop">
+    <h1 class="title">Form data</h1>
+
+    <form class="box" action="/data" method="post" enctype="multipart/form-data">
+      <div class="field">
+        <label class="label">Date</label>
+
+        <div class="control">
+          <input class="input" type="date" name="date" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Title</label>
+
+        <div class="control">
+          <input class="input" type="text" name="title" placeholder="Some title" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Amount</label>
+
+        <div class="control">
+          <input class="input" type="number" name="amount" placeholder="0123456789" required>
+        </div>
+      </div>
+
+      <button class="button is-success">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
