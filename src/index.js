@@ -3,6 +3,7 @@
 
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 
 const form = `
   <form action="/expense" method="post">
@@ -21,6 +22,8 @@ const form = `
 
 const PORT = 4200;
 const server = new http.Server();
+
+const expensesFilePath = path.join(__dirname, '..', 'expenses.json');
 
 server.on('request', (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
@@ -59,13 +62,19 @@ async function handleExpense(req, res) {
     }
 
     const expense = {
-      date, title, amount,
+      date,
+      title,
+      amount,
     };
     const expenses = await loadExpenses();
 
     expenses.push(expense);
 
-    fs.writeFile('expenses.json', JSON.stringify(expenses, null, 2));
+    fs.writeFile(expensesFilePath, JSON.stringify(expenses, null, 2), (err) => {
+      if (err) {
+        console.log('Error writing expenses file: ', err);
+      }
+    });
 
     res.writeHead(200, { 'Content-Type': 'text/html' });
 
@@ -80,9 +89,13 @@ async function handleExpense(req, res) {
 
 function loadExpenses() {
   try {
-    const data = fs.readFileSync('expenses.json', 'utf8');
+    if (!fs.existsSync(expensesFilePath)) {
+      fs.writeFileSync(expensesFilePath, '[]', 'utf8');
+    }
 
-    return JSON.parse(data);
+    const data = fs.readFileSync(expensesFilePath, 'utf8');
+
+    return JSON.parse(data);  
   } catch (err) {
     return [];
   }
