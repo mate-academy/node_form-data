@@ -95,7 +95,7 @@ function loadExpenses() {
 
     const data = fs.readFileSync(expensesFilePath, 'utf8');
 
-    return JSON.parse(data);  
+    return JSON.parse(data);
   } catch (err) {
     return [];
   }
