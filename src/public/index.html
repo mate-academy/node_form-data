@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form</title>
+  <style>
+    .form {
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: max-content;
+      padding: 10px;
+    }
+
+    .form__field {
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <form action="/formdata" enctype="multipart/form-data" method="POST" class="form">
+    <label class="form__field">
+      Date:
+      <input type="date" name="date">
+    </label>
+
+    <label class="form__field">
+      Title:
+      <input type="text" name="title">
+    </label>
+
+    <label class="form__field">
+      Amount:
+      <input type="number" name="amount">
+    </label>
+
+    <button type="submit">Sent</button>
+  </form>
+</body>
+</html>
