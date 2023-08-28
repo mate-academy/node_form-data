@@ -37,9 +37,7 @@ server.on('request', (req, res) => {
 
       fs.writeFile(filePath, JSON.stringify(fields), (err) => {
         if (err) {
-          res.statusCode = 404;
-
-          res.end('File can not be created');
+          res.status(404).end('File can not be created')
 
           return;
         }
