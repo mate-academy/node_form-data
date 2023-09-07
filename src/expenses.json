@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2023-09-07",
+    "title": "bananas",
+    "amount": 5
+  },
+  {
+    "date": "2023-09-06",
+    "title": "apple",
+    "amount": 1
+  },
+  {
+    "date": "2023-09-06",
+    "title": "orange",
+    "amount": 3
+  },
+  {
+    "date": "2023-09-05",
+    "title": "peach",
+    "amount": 2
+  }
+]
