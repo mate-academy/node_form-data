@@ -5,13 +5,13 @@ const fs = require('fs');
 const formidable = require('formidable');
 
 const PORT = process.env.PORT || 3000;
-const jsonFile = './src/expence.json';
+const jsonFile = './src/expense.json';
 
 const server = new http.Server();
 
 server.on('request', (req, res) => {
-  const normilizedUrl = new URL(req.url, `http://${req.headers.host}`);
-  const pathName = normilizedUrl.pathname.slice(1) || 'index.html';
+  const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
+  const pathName = normalizedUrl.pathname.slice(1) || 'index.html';
 
   if (pathName === 'index.html') {
     res.setHeader('Content-Type', 'text/html');
@@ -19,7 +19,7 @@ server.on('request', (req, res) => {
     const readData = fs.createReadStream(`./src/public/${pathName}`);
 
     readData.on('error', () => {
-      res.statusCode = '400';
+      res.statusCode = 400;
       res.end();
     });
 
@@ -32,81 +32,51 @@ server.on('request', (req, res) => {
     return;
   }
 
+  // ...
+
   if (pathName === 'expense') {
     const form = new formidable.IncomingForm();
 
     form.parse(req, (error, fields) => {
       if (error) {
-        res.statusCode = '500';
+        res.statusCode = 500;
         res.end();
+
+        return;
       }
 
-      const { date, title, amount } = fields;
+      const jsonFields = JSON.stringify(fields, null, 2);
 
-      const jsonFields = JSON.stringify(fields);
+      fs.writeFile(jsonFile, jsonFields, (writeError) => {
+        if (writeError) {
+          res.statusCode = 500;
+          res.end('Error Occurred');
 
-      fs.writeFileSync(jsonFile, jsonFields);
+          return;
+        }
 
-      const readData = fs.createReadStream(jsonFile);
+        const readData = fs.createReadStream(jsonFile);
 
-      readData.pipe(res);
+        res.setHeader('Content-Type', 'application/json');
+        readData.pipe(res);
 
-      res.setHeader('Content-Type', 'text/html');
+        readData.on('error', () => {
+          res.statusCode = 500;
+          res.end('Error Occurred');
+        });
 
-      readData.on('error', () => {
-        res.statusCode = '500';
-        res.end('Error Occurred');
+        res.on('close', () => {
+          readData.destroy();
+        });
+
+        res.end(jsonFields);
       });
-
-      res.on('close', () => {
-        readData.destroy();
-      });
-
-      const markup = `
-        <style>
-          table.GeneratedTable {
-            width: 100%;
-            background-color: #ffffff;
-            border-collapse: collapse;
-            border-width: 2px;
-            border-color: #ffcc00;
-            border-style: solid;
-            color: #000000;
-          }
-          table.GeneratedTable td,
-          table.GeneratedTable th {
-            border-width: 2px;
-            border-color: #ffcc00;
-            border-style: solid;
-            padding: 3px;
-          }
-          table.GeneratedTable thead {
-            background-color: #ffcc00;
-          }
-        </style>
-        <table class="GeneratedTable">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Amount</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>${title}</td>
-              <td>${amount}</td>
-              <td>${date}</td>
-            </tr>
-          </tbody>
-        </table>
-      `;
-
-      res.end(markup);
     });
 
     return;
   }
+
+  // ...
 
   res.statusCode = 404;
   res.end('File does not exist');
