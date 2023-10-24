@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Upload Example</title>
+</head>
+<body>
+<h1>Fill the form to get JSON object</h1>
+<div id="container">
+  <form action="/upload"
+        method="post"
+        enctype="multipart/form-data" >
+    <div class="preference">
+      <label for="date">Date</label>
+      <input type="date" name="date" id="date"/>
+    </div>
+    <div class="preference">
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title"/>
+    </div>
+    <div class="preference">
+      <label for="amount">Amount</label>
+      <input type="number" name="amount" id="amount"/>
+    </div>
+    <button type="submit">Upload</button>
+  </form>
+</div>
+
+</body>
+</html>
