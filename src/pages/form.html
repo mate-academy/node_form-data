@@ -6,7 +6,9 @@
 <body>
 <h1>Fill the form to get JSON object</h1>
 <div id="container">
-  <form id="form">
+  <form action="/upload"
+        method="post"
+        enctype="multipart/form-data" >
     <div class="preference">
       <label for="date">Date</label>
       <input type="date" name="date" id="date"/>
@@ -19,36 +21,9 @@
       <label for="amount">Amount</label>
       <input type="number" name="amount" id="amount"/>
     </div>
-    <button onclick="submitForm(event)">Upload</button>
+    <button type="submit">Upload</button>
   </form>
 </div>
 
-<script>
-  function submitForm(event) {
-    console.log('event', event)
-    event.preventDefault()
-    const form = document.getElementById('form');
-    const formData = {
-      date: form.date.value,
-      title: form.title.value,
-      amount: form.amount.value,
-    };
-    fetch('/upload', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('data', data);
-        // i had tried to change url to /upload here, but it didnt work
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
-'use strict';
+import formidable from 'formidable';
+import fs from 'fs';
+import http from 'http';
 
-const http = require('http');
-const fs = require('fs');
 const server = new http.Server();
 
 server.on('request', async(req, res) => {
@@ -11,33 +11,37 @@ server.on('request', async(req, res) => {
     const fileStream = fs.createReadStream('src/pages/form.html');
 
     fileStream.on('error', () => {
+      // eslint-disable-next-line
       console.log('form file not found try again');
-    }).pipe(res); // <---- here is all okay
+    }).pipe(res);
   }
 
   if (req.url === '/upload') {
     res.setHeader('Content-type', 'text/html');
 
-    const chunks = [];
-    let formData;
+    const buff = {};
+    const form = formidable({});
+    const [fields] = await form.parse(req);
 
-    req.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
+    for (const key in fields) {
+      buff[key] = fields[key][0];
+    }
 
-    req.on('end', () => {
-      formData = JSON.stringify(Buffer.concat(chunks).toString());
+    fs.writeFileSync('src/pages/result.json',
+      `{<br>
+              &ensp;<b>date</b>: ${fields.date},<br>
+              &ensp;<b>title</b>: ${fields.title},<br>
+              &ensp;<b>amount</b>: ${fields.amount},<br>
+            }`);
 
-      fs.writeFileSync('src/pages/result.json', formData);
+    const fileStream = fs.createReadStream('src/pages/result.json');
 
-      const fileStream = fs.createReadStream('src/pages/result.json');
+    res.setHeader('Content-type', 'text/html');
 
-      res.setHeader('Content-type', 'text/html');
-
-      fileStream.on('error', () => {
-        console.log('form file not found try again');
-      }).pipe(res); // how render this result (in task I need to return a new page
-    });
+    fileStream.on('error', () => {
+      // eslint-disable-next-line
+      console.log('form file not found try again');
+    }).pipe(res);
   }
 });
 
