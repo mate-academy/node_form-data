@@ -25,7 +25,6 @@ const server = http.createServer((req, res) => {
       </html>
     `);
   } else if (req.method === 'POST' && req.url === '/submit') {
-    // Handle the POST request
     let requestBody = '';
 
     req.on('data', (chunk) => {
@@ -60,6 +59,9 @@ const server = http.createServer((req, res) => {
               <body>
                 <h1>Expense Saved</h1>
                 <pre>${jsonExpense}</pre>
+                <button
+                  onclick="window.location.href='/'"
+                >Return to Main Page</button>
               </body>
             </html>
           `);
@@ -73,7 +75,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const port = 3000;
+const port = 3005;
 
 server.listen(port, () => {
   // eslint-disable-next-line no-console
