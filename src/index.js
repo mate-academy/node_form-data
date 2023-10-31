@@ -2,71 +2,64 @@
 
 const http = require('http');
 const fs = require('fs');
+const formidable = require('formidable');
 
 const server = http.createServer((req, res) => {
   if (req.method === 'GET' && req.url === '/') {
-    // Serve the HTML form
-    res.setHeader('Content-Type', 'text/html');
+    fs.readFile('src/index.html', (err, data) => {
+      if (err) {
+        // eslint-disable-next-line no-console
+        console.error('Error reading index.html:', err);
+        res.statusCode = 500;
+        res.end('Internal Server Error');
 
-    res.end(`
-      <html>
-        <head>
-          <title>Expense Form</title>
-        </head>
-        <body>
-          <h1>Expense Form</h1>
-          <form method="post" action="/submit">
-            Date: <input type="date" name="date"><br>
-            Title: <input type="text" name="title"><br>
-            Amount: <input type="text" name="amount"><br>
-            <input type="submit" value="Submit">
-          </form>
-        </body>
-      </html>
-    `);
-  } else if (req.method === 'POST' && req.url === '/submit') {
-    let requestBody = '';
+        return;
+      }
 
-    req.on('data', (chunk) => {
-      requestBody += chunk.toString();
+      res.setHeader('Content-Type', 'text/html');
+      res.end(data);
     });
+  } else if (req.method === 'POST' && req.url === '/submit') {
+    const form = new formidable.IncomingForm();
 
-    req.on('end', () => {
-      const formData = new URLSearchParams(requestBody);
-      const expense = {
-        date: formData.get('date'),
-        title: formData.get('title'),
-        amount: formData.get('amount'),
-      };
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        // eslint-disable-next-line no-console
+        console.error('Error parsing form data:', err);
+        res.statusCode = 500;
+        res.end('Internal Server Error');
+      } else {
+        const expense = {
+          date: fields.date,
+          title: fields.title,
+          amount: fields.amount,
+        };
 
-      // Save the expense data to a JSON file
-      const jsonExpense = JSON.stringify(expense, null, 2);
+        const jsonExpense = JSON.stringify(expense, null, 2);
 
-      fs.appendFile('expenses.json', jsonExpense + '\n', (err) => {
-        if (err) {
-          // eslint-disable-next-line no-console
-          console.error('Error saving expense data:', err);
-          res.statusCode = 500;
-          res.end('Internal Server Error');
-        } else {
-          res.setHeader('Content-Type', 'text/html');
+        fs.appendFile('expenses.json', jsonExpense + '\n', (erro) => {
+          if (erro) {
+            // eslint-disable-next-line no-console
+            console.error('Error saving expense data:', erro);
+            res.statusCode = 500;
+            res.end('Internal Server Error');
+          } else {
+            fs.readFile('src/expense_saved.html', (er, data) => {
+              if (er) {
+                // eslint-disable-next-line no-console
+                console.error('Error reading expense_saved.html:', er);
+                res.statusCode = 500;
+                res.end('Internal Server Error');
 
-          res.end(`
-            <html>
-              <head>
-                <title>Expense Saved</title>
-              </head>
-              <body>
-                <h1>Expense Saved</h1>
-                <pre>${jsonExpense}</pre>
-                <button
-                  onclick="window.location.href='/'"
-                >Return to Main Page</button>
-              </body>
-            </html>
-          `);
-        }
-      });
+                return;
+              }
+
+              res.setHeader('Content-Type', 'text/html');
+              res.end(data.toString().replace('%jsonExpense%', jsonExpense));
+            });
+          }
+        });
+      }
     });
   } else {
     // Handle other routes
