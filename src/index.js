@@ -4,39 +4,52 @@
 const http = require('http');
 const fs = require('fs');
 
+function getResponse(response, params) {
+  const postDataJson = JSON.stringify(params, null, 4);
+
+  fs.writeFile('./params.json', postDataJson, (error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
+
+  response.writeHead(200, { 'Content-Type': 'text/html' });
+  response.end(`<pre>${postDataJson}</pre>`);
+}
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
   if (url.pathname === '/response') {
-    const data = [];
+    if (req.method.toLowerCase() === 'get') {
+      const params = Object.fromEntries(url.searchParams.entries());
 
-    req.on('data', chunk => {
-      data.push(chunk);
-    });
+      getResponse(res, params);
+    } else {
+      let data = '';
 
-    req.on('end', () => {
-      const params = {};
-
-      data
-        .join('')
-        .split('&')
-        .forEach(item => {
-          const [ key, value ] = item.split('=');
-
-          params[key] = value;
-        });
-
-      const postDataJson = JSON.stringify(params, null, 4);
-
-      fs.writeFile('./params.json', postDataJson, (error) => {
-        if (error) {
-          console.log(error);
-        }
+      req.on('data', chunk => {
+        data += chunk;
       });
 
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(`<pre>${postDataJson}</pre>`);
-    });
+      console.log(data);
+      console.log(data.toString());
+
+      req.on('end', () => {
+        const params = {};
+
+        data
+          .toString()
+          .split('&')
+          .forEach(item => {
+            const [ key, value ] = item.split('=');
+
+            params[key] = value;
+          });
+
+        getResponse(res, params);
+      });
+    }
 
     return;
   }
@@ -44,7 +57,7 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/html');
 
   res.end(`
-  <form action="/response" method="post">
+  <form action="/response" method="get">
     <input type="date" name="date">
     <input type="text" name="title">
     <input type="number" name="amount">
@@ -58,5 +71,5 @@ server.on('error', (error) => {
 });
 
 server.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+  console.log('Server is running');
 });
