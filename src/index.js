@@ -32,9 +32,6 @@ const server = http.createServer((req, res) => {
         data += chunk;
       });
 
-      console.log(data);
-      console.log(data.toString());
-
       req.on('end', () => {
         const params = {};
 
