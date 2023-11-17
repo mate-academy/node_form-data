@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="../src/request.js" defer></script>
+    <title>Compression app</title>
+  </head>
+  <body style="margin: 0; height: 100%;">
+    <h1>Sign in</h1>
+    <form
+      action="/api"
+      method="post"
+      class="form"
+      id="form"
+    >
+      <fieldset>
+        <legend>Date</legend>
+
+        <div>
+          <input
+            type="date"
+            id="date"
+            name="date"
+          />
+        </div>
+
+      </fieldset>
+
+      <fieldset>
+        <legend>Title</legend>
+
+        <div>
+          <input
+            type="text"
+            id="title"
+            name="title"
+          />
+        </div>
+
+      </fieldset>
+
+      <fieldset>
+        <legend>Amount</legend>
+
+        <div>
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+          />
+        </div>
+
+      </fieldset>
+
+      <button type="submit">Submit</button>
+    </form>
+    <script src='../src/scripts.js'></script>
+  </body>
+</html>
