@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Data</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Form to convert in JSON</h1>
+  <form
+    action="/JSON"
+    method="post"
+    enctype="multipart/form-data"
+    class="convert_JSON"
+    >
+    <div class="content_form">
+      Data:
+      <input
+        type="date"
+        name="date"
+        require
+      >
+    </div>
+
+    <div class="content_form">
+      Title:
+      <input
+        type="text"
+        name="title"
+        require
+      >
+    </div>
+
+    <div class="content_form">
+      Amount:
+      <input
+        type="number"
+        name="amount"
+        require
+      >
+    </div>
+
+    <button class="file_compression" type="submit">Get JSON</button>
+  </form>
+</body>
+</html>
