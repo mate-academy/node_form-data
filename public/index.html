@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expenses</title>
+</head>
+<body>
+  <h1>Expenses</h1>
+
+  <form action="/expenses" method="POST">
+    <label for="date">Please, choose expense date:</label>
+    <input type="date" name="date" id="date" required>
+    <br><br>
+
+    <label for="title">Please, fill out expense name:</label>
+    <input type="text" name="title" id="title" placeholder="name" required>
+    <br><br>
+
+    <label for="amount">Please, enter expense amount:</label>
+    <input type="number" name="amount" id="amount" placeholder="amount" min="1" required>
+    <br><br>
+
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>
