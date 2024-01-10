@@ -31,12 +31,7 @@ server.on('request', (req, res) => {
       let allData;
 
       try {
-        allData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8', (error) => {
-          if (error) {
-            // eslint-disable-next-line no-console
-            console.log(error);
-          }
-        }));
+        allData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
       } catch (error) {
         allData = [];
       }
