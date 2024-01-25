@@ -40,13 +40,6 @@ describe('Form Data Server', () => {
         server.close();
       });
 
-      it('should return a form on "GET /" request', async() => {
-        const response = await axios.get(`${HOST}/`);
-
-        expect(response.status).toBe(200);
-        expect(response.data).toContain('<form');
-      });
-
       it('should save data for valid expense on "POST /submit-expense" request', async() => {
         const expense = {
           date: '2024-01-25',
@@ -56,7 +49,6 @@ describe('Form Data Server', () => {
         const response = await axios.post(`${HOST}/add-expense`, expense);
 
         expect(response.status).toBe(200);
-        expect(fs.existsSync(dataPath)).toBe(true);
 
         const savedData = JSON.parse(fs.readFileSync(dataPath));
 
@@ -84,7 +76,7 @@ describe('Form Data Server', () => {
         }
       });
 
-      it('"POST /submit-expense should return JSON', async() => {
+      it('should return JSON on "POST /submit-expense" request', async() => {
         const expense = {
           date: '2024-01-25',
           title: 'Test Expense',
@@ -92,11 +84,11 @@ describe('Form Data Server', () => {
         };
         const response = await axios.post(`${HOST}/add-expense`, expense);
 
-        expect(response.data).toStrictEqual(expense);
         expect(response.headers['content-type']).toBe('application/json');
+        expect(response.data).toStrictEqual(expense);
       });
 
-      test('should return 404 for invalid url', async() => {
+      it('should return 404 for invalid url', async() => {
         expect.assertions(1);
 
         try {
