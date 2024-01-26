@@ -3,50 +3,41 @@
 
 const http = require('http');
 const formidable = require('formidable');
+const fs = require('fs');
+const path = require('path');
 
 const server = new http.Server();
 
 server.on('request', (req, res) => {
-  console.log(req.method);
-
   if (req.method === 'POST') {
     const form = new formidable.IncomingForm();
-    let data;
-    console.log('hi');
 
     form.parse(req, (err, fields) => {
       if (err) {
-        console.log('hi again');
-        res.statusCode = 500;
+        res.statusCode = 400;
         res.end(err.message);
-
-        return;
       }
 
-      data = fields;
-      console.log(data);
+      const filePath = path.join(__dirname, 'expense.json');
 
-      res.write(JSON.stringify(data));
+      console.log(fields.amount);
+      console.log(fields);
+
+      try {
+        fs.writeFileSync(filePath, JSON.stringify(fields), 'utf8');
+      } catch (error) {
+        console.error(error);
+      }
+
+      const data = `
+          <div>
+           <h3>${fields.date}</h3>
+           <p>Expense for ${fields.title} was ${fields.amount}</p>
+          </div>
+        `;
+
+      res.end(data);
     });
-
-    // res.write(JSON.stringify(data));
-
-    res.end();
-
-    //   res.on('finish', () => {
-    //     res.end(`
-    //     <html>
-    //         <body>
-    //             <h1>Expense Saved</h1>
-    //             <pre>
-    //               ${JSON.stringify(data)}
-    //             </pre>
-    //         </body>
-    //     </html>
-    // `);
-    //   });
-
-    // res.end();
   }
 });
 
