@@ -32,8 +32,6 @@ describe('Form Data Server', () => {
       beforeEach(() => {
         server = createServer();
         server.listen(PORT);
-
-        fs.writeFileSync(dataPath, JSON.stringify({}));
       });
 
       afterEach(() => {
@@ -41,6 +39,8 @@ describe('Form Data Server', () => {
       });
 
       it('should save data for valid expense on "POST /submit-expense" request', async() => {
+        fs.writeFileSync(dataPath, JSON.stringify({}));
+
         const expense = {
           date: '2024-01-25',
           title: 'Test Expense',
@@ -52,12 +52,12 @@ describe('Form Data Server', () => {
 
         const savedData = JSON.parse(fs.readFileSync(dataPath));
 
-        Object.entries(expense).forEach(([key, value]) => {
-          expect(savedData[key]).toBe(value);
-        });
+        expect(savedData).toStrictEqual(expense);
       });
 
       it('should reject request without all params on "POST /submit-expense" request', async() => {
+        fs.writeFileSync(dataPath, JSON.stringify({}));
+
         const expense = {
           title: 'Invalid Expense',
           amount: '100',
