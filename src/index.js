@@ -20,9 +20,6 @@ server.on('request', (req, res) => {
 
       const filePath = path.join(__dirname, 'expense.json');
 
-      console.log(fields.amount);
-      console.log(fields);
-
       try {
         fs.writeFileSync(filePath, JSON.stringify(fields), 'utf8');
       } catch (error) {
