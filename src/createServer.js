@@ -2,6 +2,7 @@
 
 const http = require('http');
 const fs = require('fs');
+const formidable = require('formidable');
 
 function createServer() {
   return new http.Server((req, res) => {
@@ -9,37 +10,37 @@ function createServer() {
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.end(fs.readFileSync('public/index.html'));
     } else if (req.url === '/add-expense' && req.method === 'POST') {
-      let data = '';
+      const form = new formidable.IncomingForm();
 
-      req.on('data', (chunk) => {
-        data += chunk;
-      });
+      form.parse(req)
+        .then(([fields]) => {
+          if (!fields.date
+            || !fields.title
+            || !fields.amount) {
+            fs.writeFileSync('db/expense.json', JSON.stringify({}));
+            res.writeHead(400, { 'Content-Type': 'text/plain' });
+            res.end('Invalid form data');
 
-      req.on('end', () => {
-        const params = new URLSearchParams(data);
+            return;
+          }
 
-        if (!params.get('date')
-          || !params.get('title')
-          || !params.get('amount')) {
-          fs.writeFileSync('db/expense.json', JSON.stringify({}));
-          res.writeHead(400, { 'Content-Type': 'text/plain' });
-          res.end('Invalid form data');
+          const obj = {
+            date: fields.date,
+            title: fields.title,
+            amount: fields.amount,
+          };
 
-          return;
-        }
+          const str = JSON.stringify(obj);
 
-        const obj = {
-          date: params.get('date'),
-          title: params.get('title'),
-          amount: params.get('amount'),
-        };
-
-        const str = JSON.stringify(obj);
-
-        fs.writeFileSync('db/expense.json', str);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(str);
-      });
+          fs.writeFileSync('db/expense.json', str);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write(str);
+        }).catch(() => {
+          res.writeHead(500, { 'Content-Type': 'text/plain' });
+          res.write('Server error');
+        }).finally(() => {
+          res.end('');
+        });
     } else {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('Page not found');
