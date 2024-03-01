@@ -1,0 +1,163 @@
+:root {
+  --red-pantone: #EA3546;
+  --rich-black: #001524;
+  --white: #FFFFFF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
+
+input,
+select {
+  outline: none;
+}
+
+html {
+  font-family: "Kode Mono", monospace;
+  color: var(--white);
+}
+
+body {
+  padding-top: 20px;
+  background: linear-gradient(to bottom right, #001524, #002244, #001524);
+  min-height: 100dvh;
+  overflow-y: scroll;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin-inline: auto;
+  padding: 20px;
+  background-color: var(--rich-black);
+  border-radius: 5px;
+}
+
+h1 {
+  align-self: center;
+}
+
+#expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-control--last {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control--last:has(details[open]) {
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 20px;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 2px;
+  background-color: var(--white);
+  border: none;
+  color: var(--rich-black);
+  font-weight: 700;
+  font-family: inherit;
+}
+
+.form-control button {
+  color: var(--white);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid var(--white);
+}
+
+th,
+td {
+  padding: 10px;
+}
+
+.add-category {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+}
+
+.add-category input {
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: var(--white);
+  color: var(--rich-black);
+}
+
+.add-category button {
+  width: 180px;
+  height: 40px;
+  background-color: var(--red-pantone);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-category button:hover {
+  background-color: var(--rich-black);
+  border: 1px solid var(--white);
+}
+
+summary {
+  user-select: none;
+  cursor: pointer;
+  padding: 10px;
+  color: var(--white);
+  border-radius: 4px;
+  height: 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+summary:hover {
+  text-decoration: underline;
+}
+
+button[type="submit"] {
+  background-color: var(--red-pantone);
+  color: var(--white);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  width: 160px;
+  height: 40px;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--rich-black);
+  border: 1px solid var(--white);
+}

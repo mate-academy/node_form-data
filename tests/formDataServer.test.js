@@ -31,6 +31,7 @@ describe('Form Data Server', () => {
 
       beforeEach(() => {
         server = createServer();
+
         server.listen(PORT);
       });
 
@@ -45,6 +46,7 @@ describe('Form Data Server', () => {
           date: '2024-01-25',
           title: 'Test Expense',
           amount: '100',
+          category: 'Some category',
         };
         const response = await axios.post(`${HOST}/add-expense`, expense);
 

@@ -1,1 +1,182 @@
-{}
+[
+  {
+    "title": "Groceries",
+    "amount": "50",
+    "category": "food",
+    "date": "02/01/2024"
+  },
+  {
+    "title": "Movie Tickets",
+    "amount": "20",
+    "category": "entertainment",
+    "date": "02/02/2024"
+  },
+  {
+    "title": "New Shirt",
+    "amount": "35",
+    "category": "clothing",
+    "date": "02/03/2024"
+  },
+  {
+    "title": "Coffee",
+    "amount": "10",
+    "category": "beverages",
+    "date": "02/04/2024"
+  },
+  {
+    "title": "Lunch at Thai Restaurant",
+    "amount": "30",
+    "category": "dining",
+    "date": "02/05/2024"
+  },
+  {
+    "title": "Concert Tickets",
+    "amount": "70",
+    "category": "events",
+    "date": "02/06/2024"
+  },
+  {
+    "title": "Gift for Friend",
+    "amount": "15",
+    "category": "gifts",
+    "date": "02/07/2024"
+  },
+  {
+    "title": "Gym Membership",
+    "amount": "80",
+    "category": "fitness",
+    "date": "02/08/2024"
+  },
+  {
+    "title": "Home Decor",
+    "amount": "45",
+    "category": "home",
+    "date": "02/09/2024"
+  },
+  {
+    "title": "Transportation",
+    "amount": "25",
+    "category": "travel",
+    "date": "02/10/2024"
+  },
+  {
+    "title": "Dinner Out",
+    "amount": "40",
+    "category": "food",
+    "date": "02/11/2024"
+  },
+  {
+    "title": "Music Album",
+    "amount": "15",
+    "category": "entertainment",
+    "date": "02/12/2024"
+  },
+  {
+    "title": "Running Shoes",
+    "amount": "90",
+    "category": "sportswear",
+    "date": "02/13/2024"
+  },
+  {
+    "title": "Juice",
+    "amount": "8",
+    "category": "beverages",
+    "date": "02/14/2024"
+  },
+  {
+    "title": "Brunch",
+    "amount": "35",
+    "category": "dining",
+    "date": "02/15/2024"
+  },
+  {
+    "title": "Theater Play",
+    "amount": "60",
+    "category": "events",
+    "date": "02/16/2024"
+  },
+  {
+    "title": "Birthday Gift",
+    "amount": "25",
+    "category": "gifts",
+    "date": "02/17/2024"
+  },
+  {
+    "title": "Yoga Class",
+    "amount": "20",
+    "category": "fitness",
+    "date": "02/18/2024"
+  },
+  {
+    "title": "Curtains",
+    "amount": "50",
+    "category": "home",
+    "date": "02/19/2024"
+  },
+  {
+    "title": "Train Tickets",
+    "amount": "30",
+    "category": "travel",
+    "date": "02/20/2024"
+  },
+  {
+    "title": "Desserts",
+    "amount": "15",
+    "category": "food",
+    "date": "02/21/2024"
+  },
+  {
+    "title": "Movie Rental",
+    "amount": "5",
+    "category": "entertainment",
+    "date": "02/22/2024"
+  },
+  {
+    "title": "Tennis Racket",
+    "amount": "70",
+    "category": "sportswear",
+    "date": "02/23/2024"
+  },
+  {
+    "title": "Smoothie",
+    "amount": "6",
+    "category": "beverages",
+    "date": "02/24/2024"
+  },
+  {
+    "title": "Dinner Party",
+    "amount": "100",
+    "category": "dining",
+    "date": "02/25/2024"
+  },
+  {
+    "title": "Comedy Show",
+    "amount": "40",
+    "category": "events",
+    "date": "02/26/2024"
+  },
+  {
+    "title": "Books",
+    "amount": "30",
+    "category": "gifts",
+    "date": "02/27/2024"
+  },
+  {
+    "title": "Gym Wear",
+    "amount": "55",
+    "category": "fitness",
+    "date": "02/28/2024"
+  },
+  {
+    "title": "Bedding",
+    "amount": "65",
+    "category": "home",
+    "date": "02/29/2024"
+  },
+  {
+    "title": "Flight Tickets",
+    "amount": "200",
+    "category": "travel",
+    "date": "03/01/2024"
+  }
+]
