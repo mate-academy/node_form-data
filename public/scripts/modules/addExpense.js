@@ -9,7 +9,7 @@ export async function addExpense() {
 
   const expense = {
     title: titleElement.value,
-    amount: amountElement.value,
+    amount: Number(amountElement.value),
     category: categoryElement.value,
     date: dateElement.value,
   };
@@ -21,7 +21,7 @@ export async function addExpense() {
       titleElement.value = '';
       amountElement.value = '';
       dateElement.value = '';
-      categoryElement.value = 'Food';
+      categoryElement.value = 'food';
     }
 
     await setExpenses();

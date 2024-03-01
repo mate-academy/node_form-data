@@ -15,6 +15,8 @@ async function handleAddExpense(request, response) {
     /* eslint-disable no-console */
     console.error(err);
     response.end(ERROR.SERVER_ERROR.message);
+
+    return;
   }
 
   try {
@@ -24,13 +26,18 @@ async function handleAddExpense(request, response) {
   } catch (err) {
     response.statusCode = ERROR.BAD_NEW_EXPENSE.code;
     response.end(ERROR.BAD_NEW_EXPENSE.message);
+
+    return;
   }
 
   try {
     newExpense = getValidatedExpense(newExpense);
   } catch (error) {
+    console.error(error);
     response.statusCode = ERROR.BAD_NEW_EXPENSE.code;
     response.end(error.message);
+
+    return;
   }
 
   try {

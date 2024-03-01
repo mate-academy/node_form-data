@@ -2,19 +2,30 @@
 
 const { ERROR } = require('../../errors');
 
-function formatDateToMMDDYYYY(date) {
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const year = date.getFullYear();
+function isValidDate(dateString) {
+  const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/;
 
-  return `${month}/${day}/${year}`;
+  if (dateString.match(regex) === null) {
+    return false;
+  }
+
+  const parts = dateString.split('/');
+  const month = parseInt(parts[0], 10);
+  const day = parseInt(parts[1], 10);
+  const year = parseInt(parts[2], 10);
+
+  const date = new Date(year, month - 1, day);
+
+  return date.getFullYear() === year
+    && date.getMonth() === month - 1
+    && date.getDate() === day;
 }
 
 function getValidatedExpense(newExpense) {
   /* eslint-disable-next-line prefer-const */
-  let { name, amount, date, category } = newExpense;
+  let { title, amount, date, category } = newExpense;
 
-  name = name !== undefined ? name.trim() : undefined;
+  title = title !== undefined ? title.trim() : undefined;
   category = category !== undefined ? category.trim() : undefined;
   date = date !== undefined ? date.trim() : undefined;
 
@@ -22,11 +33,11 @@ function getValidatedExpense(newExpense) {
     throw new Error(ERROR.BAD_NEW_EXPENSE.message);
   }
 
-  if (!name) {
+  if (!title) {
     throw new Error(ERROR.EXPENSE_NAME_REQUIRED.message);
   }
 
-  if (!(name instanceof String)) {
+  if (!(typeof title === 'string')) {
     throw new Error(ERROR.EXPENSE_NAME_MUST_BE_STRING.message);
   }
 
@@ -34,7 +45,7 @@ function getValidatedExpense(newExpense) {
     throw new Error(ERROR.AMOUNT_REQUIRED.message);
   }
 
-  if (!(amount instanceof Number) && amount > 0) {
+  if (!(typeof amount === 'number') && amount > 0) {
     throw new Error(ERROR.AMOUNT_MUST_BE_NUMBER.message);
   }
 
@@ -42,7 +53,7 @@ function getValidatedExpense(newExpense) {
     throw new Error(ERROR.CATEGORY_REQUIRED.message);
   }
 
-  if (!(category instanceof String)) {
+  if (!(typeof category === 'string')) {
     throw new Error(ERROR.CATEGORY_MUST_BE_STRING.message);
   }
 
@@ -50,20 +61,18 @@ function getValidatedExpense(newExpense) {
     throw new Error(ERROR.DATE_REQUIRED.message);
   }
 
-  if (!(date instanceof String)) {
+  if (!(typeof date === 'string')) {
     throw new Error(ERROR.DATE_MUST_BE_STRING.message);
   }
 
-  date = new Date(date);
-
-  if (date.toString() === 'Invalid Date') {
-    throw new Error(ERROR.DATE_MUST_BE_VALID.message);
+  if (!isValidDate(date)) {
+    throw new Error(ERROR.DATE_IS_NOT_VALID.message);
   }
 
   return {
-    name,
+    title,
     amount,
-    date: formatDateToMMDDYYYY(date),
+    date,
     category,
   };
 }
