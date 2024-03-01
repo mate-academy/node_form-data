@@ -8,8 +8,10 @@ const { saveExpenses } = require('./saveExpenses');
 const { getValidatedExpense } = require('./getValidatedExpense');
 
 async function handleAddExpense(request, response) {
+  let expenses, newExpense;
+
   try {
-    var expenses = await getExpenses();
+    expenses = await getExpenses();
   } catch (err) {
     response.statusCode = ERROR.SERVER_ERROR.code;
     /* eslint-disable no-console */
@@ -20,7 +22,7 @@ async function handleAddExpense(request, response) {
   }
 
   try {
-    var newExpense = await getNewExpense(request);
+    newExpense = await getNewExpense(request);
 
     expenses.push(newExpense);
   } catch (err) {
