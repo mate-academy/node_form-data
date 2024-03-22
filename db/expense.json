@@ -1,5 +1,17 @@
-{
-  "date": "2024-01-25",
-  "title": "Test Expense",
-  "amount": "100"
-}
+[
+  {
+    "data": "",
+    "title": "",
+    "amount": ""
+  },
+  {
+    "data": "",
+    "title": "",
+    "amount": ""
+  },
+  {
+    "data": "2024-03-15",
+    "title": "sdf",
+    "amount": "2323"
+  }
+]

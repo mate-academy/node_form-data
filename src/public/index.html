@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>My expenses</h1>
+    <!-- <form action="/add-expense" enctype="multipart/form-data" method="post"> -->
+    <form
+      enctype="multipart/form-data"
+      onsubmit="handleSumbit(event)"
+      id="form"
+    >
+      <input type="date" name="data" />
+      <input type="text" name="title" placeholder="Enter title" />
+      <input type="number" name="amount" placeholder="Enter amount" />
+      <button type="submit">Add expense</button>
+    </form>
+
+    <script>
+      console.log('script');
+      async function handleSumbit(event) {
+        console.log('submit');
+        event.preventDefault();
+
+        const form = document.getElementById('form');
+
+        const formData = new FormData(form);
+
+        try {
+          const respose = await fetch('/add-expense', {
+            method: 'post',
+            body: formData,
+          });
+
+          if (respose.ok) {
+            form.reset();
+          } else {
+            console.error('Failed fetching form:', response.statusText);
+          }
+        } catch (err) {
+          console.error('Error submitting form:', error);
+        }
+      }
+    </script>
+  </body>
+</html>
