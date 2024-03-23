@@ -5,12 +5,9 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { formidable, errors: formidableErrors } = require('formidable');
-const { pipeline } = require('stream');
 
+const { pipeline } = require('stream');
 const getContentType = require('./helpers/getContentType');
-const normalizeFormData = require('./helpers/normalizeFromData');
-const getAllExpenses = require('./helpers/getAllExpenses');
 
 const ITERNAL_SERVER_ERR = 'Internal Server Error';
 const PATH_TO_DB = path.join(__dirname, '../db', 'expense.json');
@@ -85,46 +82,55 @@ function handleStaticFile(pathname, res) {
 }
 
 async function handleAddNewExpense(req, res) {
-  const form = formidable({});
-  let fields;
+  let formData = '';
 
-  try {
-    [fields] = await form.parse(req);
-  } catch (err) {
-    if (err.code === formidableErrors.maxFieldsExceeded) {
-      throw new Error('Form field error', err);
+  req.on('data', (chunk) => {
+    formData += chunk;
+  });
+
+  req.on('end', () => {
+    try {
+      console.log('Received expense data:', JSON.parse(formData));
+
+      const form = JSON.parse(formData);
+
+      if (Object.keys(form).length < 3) {
+        writeNewExpense(res, {});
+
+        return;
+      }
+
+      writeNewExpense(res, form);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      res.end('Error parsing JSON');
     }
+  });
+}
 
-    console.error(err);
-    res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
-    res.end(String(err));
+function writeNewExpense(res, newExpense) {
+  const writableStream = fs.createWriteStream(PATH_TO_DB);
+  const notEmpty = Object.keys(newExpense).length;
 
-    return;
-  }
+  writableStream.on('error', () => {
+    console.log('Add new expanses Error: writeble stream');
+  });
 
-  try {
-    const newExpense = normalizeFormData(fields);
-    const myExpenses = await getAllExpenses();
+  writableStream.on('finish', () => {
+    if (notEmpty) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(newExpense), null, 2);
+    } else {
+      res.writeHead(400, 'Invalid form data');
+      res.end('Invalid form inputs');
+    }
+  });
 
-    myExpenses.push(newExpense);
+  writableStream.write(JSON.stringify(newExpense, null, 2));
+  writableStream.end();
 
-    const writableStream = fs.createWriteStream(PATH_TO_DB);
-
-    writableStream.write(JSON.stringify(myExpenses, null, 2));
-
-    writableStream.on('error', () => {
-      console.log('Add new expanses Error: writeble stream');
-    });
-
-    writableStream.end();
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(myExpenses, null, 2));
-
-    console.log('Expenses updated successfully.');
-  } catch (err) {
-    console.error('Error updating expenses:', err);
-  }
+  console.log('Expenses updated successfully.');
 }
 
 module.exports = {
