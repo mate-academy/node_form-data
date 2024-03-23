@@ -45,7 +45,7 @@ describe('Form Data Server', () => {
         const expense = {
           date: '2024-01-25',
           title: 'Test Expense',
-          amount: '100',
+          amount: '',
         };
         const response = await axios.post(`${HOST}/add-expense`, expense);
 

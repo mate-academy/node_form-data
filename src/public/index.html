@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+  </head>
+
+  <body>
+    <h1>My expenses</h1>
+    <!-- <form action="/add-expense" method="post" onsubmit="handleSumvit"> -->
+    <form onsubmit="handleSubmit(event)" id="form">
+      <input type="date" name="date" id="dateInput" />
+      <input
+        type="text"
+        name="title"
+        placeholder="Enter title"
+        id="titleInput"
+      />
+      <input
+        type="number"
+        name="amount"
+        placeholder="Enter amount"
+        id="amountInput"
+      />
+      <button type="submit">Add expense</button>
+    </form>
+
+    <script>
+      function handleSubmit(event) {
+        event.preventDefault();
+        const form = document.getElementById('form');
+
+        const formData = {
+          date: document.getElementById('dateInput').value,
+          title: document.getElementById('titleInput').value,
+          amount: document.getElementById('amountInput').value,
+        };
+
+        axios
+          .post('http://localhost:5701/add-expense', formData)
+          .then((res) => {
+            console.log('Form was submited');
+            form.reset();
+          })
+          .catch((err) => console.log('Error:', err));
+      }
+    </script>
+  </body>
+</html>
