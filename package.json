@@ -27,8 +27,5 @@
   },
   "mateAcademy": {
     "projectType": "javascript"
-  },
-  "dependencies": {
-    "formidable": "^3.5.1"
   }
 }
