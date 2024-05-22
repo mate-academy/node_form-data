@@ -4,10 +4,13 @@ const http = require('http');
 const fs = require('fs');
 const formidable = require('formidable');
 const path = require('path');
+const { methods } = require('./constants/methods');
+const { pathUrl } = require('./constants/path');
+const { response } = require('./constants/response');
 
 function createServer() {
   return http.createServer(async (req, res) => {
-    if (req.url === '/add-expense' && req.method === 'POST') {
+    if (req.url === pathUrl.add && req.method === methods.post) {
       const form = new formidable.Formidable({});
       let fields;
 
@@ -16,16 +19,19 @@ function createServer() {
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error({ catch: err });
-        res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+
+        res.writeHead(err.httpCode || response[400].statusCode, {
+          'Content-Type': 'text/plain',
+        });
         res.end(String(err));
 
         return;
       }
 
       if (!fields.date || !fields.title || !fields.amount) {
-        res.statusCode = 400;
+        res.statusCode = response[400].statusCode;
         // res.setHeader('Content-Type', 'application/json');
-        res.end('wrong data');
+        res.end(response[400].messages.data);
 
         return;
       }
@@ -34,7 +40,7 @@ function createServer() {
 
       const writeStream = fs.createWriteStream(pathToJSON);
 
-      res.statusCode = 200;
+      res.statusCode = response[200].statusCode;
       res.setHeader('Content-Type', 'application/json');
 
       writeStream.write(JSON.stringify(fields));
@@ -44,9 +50,9 @@ function createServer() {
         res.end(JSON.stringify(fields));
       });
     } else {
-      res.statusCode = 404;
+      res.statusCode = response[404].statusCode;
       res.setHeader('Content-Type', 'text/plain');
-      res.end('invalid url');
+      res.end(response[404].messages.notFound);
     }
   });
 }
