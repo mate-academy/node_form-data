@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense form</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <h1 class="title" style="width: 400px; margin: 40px auto;">Send your expense:</h1>
+  <form
+    style="width: 400px; margin: 40px auto;"
+    action="http://localhost:3000/expense"
+    method="POST"
+  >
+    <div class="field">
+      <label class="label">Date:</label>
+      <div class="control">
+        <input class="input" type="date" name="date">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Title:</label>
+      <div class="control">
+        <input class="input" type="text" name="title" placeholder="Your expense title">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Amount:</label>
+      <div class="control">
+        <input class="input" type="text" name="amount" placeholder="Your expense amount">
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link">Submit</button>
+      </div>
+      <div class="control">
+        <button class="button is-link is-light">Cancel</button>
+      </div>
+    </div>
+  </form>
+</body>
+</html>
