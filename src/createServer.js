@@ -13,6 +13,21 @@ function createServer() {
       return res.end('Wrong request URL');
     }
 
+    if (req.method === 'GET' && req.url === '/') {
+      fs.readFile('./public/index.html', (err, data) => {
+        if (err) {
+          res.statusCode = 404;
+          res.end('Not found');
+
+          return;
+        }
+
+        res.statusCode = 200;
+        res.setHeader('Content-type', 'text/html');
+        res.end(data);
+      });
+    }
+
     const chunks = [];
 
     req.on('data', (chunk) => chunks.push(chunk));
