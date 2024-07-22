@@ -3,6 +3,7 @@
 
 const http = require('http');
 const fs = require('fs');
+const querystring = require('node:querystring');
 
 function createServer() {
   const server = new http.Server();
@@ -31,6 +32,8 @@ function createServer() {
 
         res.end(data);
       });
+
+      return;
     }
 
     if (req.method === 'GET' && pathname === '/add-expense') {
@@ -43,33 +46,39 @@ function createServer() {
     if (req.method === 'POST' && pathname === '/add-expense') {
       const chunks = [];
 
-      for await (const chunk of req) {
-        chunks.push(chunk);
-      }
+      req.on('data', (chunk) => chunks.push(chunk));
 
-      const body = Buffer.concat(chunks).toString();
-      const data = JSON.parse(body);
-      const { date, title, amount } = data;
+      req.on('end', () => {
+        const body = Buffer.concat(chunks).toString();
 
-      if (!date || !title || !amount) {
-        res.statusCode = 400;
-        res.end('All fields are required');
+        let data;
 
-        return;
-      }
+        if (req.headers['content-type'] === 'application/json') {
+          data = JSON.parse(body);
+        } else {
+          data = querystring.parse(body);
+        }
 
-      res.setHeader('Content-Type', 'application/json');
-      res.statusCode = 200;
+        const { date, title, amount } = data;
 
-      console.log(JSON.stringify(data));
+        if (!date || !title || !amount) {
+          res.statusCode = 400;
+          res.end('All fields are required');
 
-      const fileStream = fs.createWriteStream('./db/expense.json');
+          return;
+        }
 
-      fileStream.write(JSON.stringify(data));
-      fileStream.end();
+        res.setHeader('Content-Type', 'application/json');
+        res.statusCode = 200;
 
-      fileStream.on('finish', () => {
-        res.end(JSON.stringify(data));
+        const fileStream = fs.createWriteStream('./db/expense.json');
+
+        fileStream.write(JSON.stringify(data));
+        fileStream.end();
+
+        fileStream.on('finish', () => {
+          res.end(JSON.stringify(data));
+        });
       });
     }
   });
