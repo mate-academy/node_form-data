@@ -31,7 +31,10 @@ function createServer() {
           expenses = JSON.parse(data);
         }
 
-        expenses.push(expense);
+        expenses = {
+          ...expenses,
+          expense,
+        };
         fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2), 'utf-8');
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
