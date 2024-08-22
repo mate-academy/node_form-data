@@ -33,7 +33,7 @@ function createServer() {
 
         expenses = {
           ...expenses,
-          expense,
+          ...expense,
         };
         fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2), 'utf-8');
 
