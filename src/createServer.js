@@ -31,10 +31,22 @@ function createServer() {
           expenses = JSON.parse(data);
         }
 
-        expenses = {
-          ...expenses,
+        let maxId = 0;
+
+        const keys = Object.keys(expenses);
+
+        for (const key of keys) {
+          if (expenses[key].id > maxId) {
+            maxId = expenses[key].id;
+          }
+        }
+
+        const newExpense = {
           ...expense,
+          id: +maxId + 1,
         };
+
+        expenses = [...expenses, { ...newExpense }];
         fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2), 'utf-8');
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
