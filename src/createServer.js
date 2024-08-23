@@ -20,7 +20,7 @@ function createServer() {
         const filePath = path.resolve('db', 'expense.json');
 
         if (err || !date || !title || !amount) {
-          res.writeHead(404, { 'Content-Type': 'text/plain' });
+          res.writeHead(400, { 'Content-Type': 'text/plain' });
 
           return res.end('invalid form data');
         }
@@ -45,7 +45,7 @@ function createServer() {
       return;
     }
 
-    if (url.pathname === '/') {
+    if (url.pathname === '/' && req.method === 'POST') {
       const html = fs.createReadStream(path.resolve('src', 'index.html'));
 
       res.setHeader('Content-Type', 'text/html');
