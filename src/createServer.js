@@ -45,7 +45,7 @@ function createServer() {
       return;
     }
 
-    if (url.pathname === '/' && req.method === 'POST') {
+    if (url.pathname === '/') {
       const html = fs.createReadStream(path.resolve('src', 'index.html'));
 
       res.setHeader('Content-Type', 'text/html');
