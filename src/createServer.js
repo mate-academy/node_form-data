@@ -9,7 +9,7 @@ function createServer() {
   return http.createServer((req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const form = new formidable.IncomingForm();
-    let expenses = [];
+    let expenses = {};
 
     if (
       url.pathname === '/submit-expense' &&
