@@ -16,7 +16,7 @@ function createServer() {
       req.method.toLocaleLowerCase() === 'post'
     ) {
       form.parse(req, (err, { date, title, amount }) => {
-        const expense = { title, date, amount };
+        // const expense = { title, date, amount };
         const filePath = path.resolve('db', 'expense.json');
 
         if (err || !date || !title || !amount) {
@@ -42,7 +42,9 @@ function createServer() {
         }
 
         const newExpense = {
-          ...expense,
+          title: title.join(),
+          date: date.join(),
+          amount: amount.join(),
           id: +maxId + 1,
         };
 
