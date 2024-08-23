@@ -1,11 +1,5 @@
 {
-  "title": [
-    "da"
-  ],
-  "date": [
-    "02-12-12"
-  ],
-  "amount": [
-    "999"
-  ]
+  "title": "Test Expense",
+  "date": "2024-01-25",
+  "amount": "100"
 }
