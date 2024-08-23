@@ -46,7 +46,12 @@ function createServer() {
           id: +maxId + 1,
         };
 
-        expenses = [...expenses, { ...newExpense }];
+        if (expenses.length > 0) {
+          expenses = [...expenses, newExpense];
+        } else {
+          expenses = [newExpense];
+        }
+
         fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2), 'utf-8');
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
