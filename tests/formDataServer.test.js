@@ -47,7 +47,7 @@ describe('Form Data Server', () => {
           title: 'Test Expense',
           amount: '100',
         };
-        const response = await axios.post(`${HOST}/add-expense`, expense);
+        const response = await axios.post(`${HOST}/submit-expense`, expense);
 
         expect(response.status).toBe(200);
 
@@ -67,7 +67,7 @@ describe('Form Data Server', () => {
         expect.assertions(2);
 
         try {
-          await axios.post(`${HOST}/add-expense`, expense);
+          await axios.post(`${HOST}/submit-expense`, expense);
         } catch (err) {
           expect(err.response.data.length).toBeGreaterThan(0);
 
@@ -81,7 +81,7 @@ describe('Form Data Server', () => {
           title: 'Test Expense',
           amount: '100',
         };
-        const response = await axios.post(`${HOST}/add-expense`, expense);
+        const response = await axios.post(`${HOST}/submit-expense`, expense);
 
         expect(response.headers['content-type']).toBe('application/json');
         expect(response.data).toStrictEqual(expense);

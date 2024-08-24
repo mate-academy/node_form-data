@@ -1,8 +1,58 @@
 'use strict';
 
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const formidable = require('formidable');
+
 function createServer() {
-  /* Write your code here */
-  // Return instance of http.Server class
+  return http.createServer((req, res) => {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const form = new formidable.IncomingForm();
+    let expenses = [];
+
+    if (url.pathname === '/submit-expense' && req.method === 'POST') {
+      form.parse(req, (err, { date, title, amount }) => {
+        const expense = { title, date, amount };
+        const filePath = path.resolve('db', 'expense.json');
+
+        if (err || !date || !title || !amount) {
+          res.writeHead(400, { 'Content-Type': 'text/plain' });
+
+          return res.end('invalid form data');
+        }
+
+        if (fs.existsSync(filePath)) {
+          const data = fs.readFileSync(filePath, 'utf-8');
+
+          expenses = JSON.parse(data);
+        }
+
+        expenses = {
+          ...expenses,
+          ...expense,
+        };
+        fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2), 'utf-8');
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+
+        res.end(JSON.stringify(expenses, null, 2));
+      });
+
+      return;
+    }
+
+    if (url.pathname === '/') {
+      const html = fs.createReadStream(path.resolve('src', 'index.html'));
+
+      res.setHeader('Content-Type', 'text/html');
+
+      return html.pipe(res);
+    }
+
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  });
 }
 
 module.exports = {
