@@ -11,10 +11,7 @@ function createServer() {
     const form = new formidable.IncomingForm();
     let expenses = [];
 
-    if (
-      url.pathname === '/submit-expense' &&
-      req.method.toLocaleLowerCase() === 'post'
-    ) {
+    if (url.pathname === '/submit-expense' && req.method === 'POST') {
       form.parse(req, (err, { date, title, amount }) => {
         const expense = { title, date, amount };
         const filePath = path.resolve('db', 'expense.json');
