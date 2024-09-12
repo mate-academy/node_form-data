@@ -5,7 +5,7 @@ const { Server } = require('http');
 const path = require('path');
 const fs = require('fs');
 
-// const querystring = require('querystring');
+const querystring = require('querystring');
 
 function createServer() {
   const server = new Server();
@@ -49,10 +49,10 @@ function createServer() {
 
       req.on('end', () => {
         // content-type: application/x-www-form-urlencoded
-        const parsedData = JSON.parse(chunks); // but have fail in browser
+        // const parsedData = JSON.parse(chunks); // but have fail in browser
 
         // this one fail tests but in browser work good header
-        // const parsedData = querystring.parse(chunks);
+        const parsedData = querystring.parse(chunks);
 
         if (!parsedData.date || !parsedData.title || !parsedData.amount) {
           res.statusCode = 400; // Bad Request

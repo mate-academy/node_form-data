@@ -20,16 +20,12 @@ function createServer() {
         res.end('Server Error');
       });
 
-      // fileStream.on('end', () => {
-      //   console.log(process.memoryUsage().external);
-      // });
-
       return;
     }
 
     if (req.url === '/add-expense' && req.method === 'POST') {
-      const dataStream = fs.createWriteStream('./db/expense.json');
-      const fileStream = fs.createReadStream('./db/expense.json');
+      // const dataStream = fs.createWriteStream('./db/expense.json');
+      // const fileStream = fs.createReadStream('./db/expense.json');
 
       const chunks = [];
 
@@ -38,38 +34,54 @@ function createServer() {
       });
 
       req.on('end', () => {
-        const chunksData = Buffer.concat(chunks).toString();
-        const parseData = JSON.parse(chunksData);
+        const chunksData = Buffer.concat(chunks)
+          .toString()
+          .split('&')
+          .map((el) => {
+            const [key, value] = el.split('=');
 
-        if (!parseData.date || !parseData.title || !parseData.amount) {
+            return { key, value };
+          })
+          .reduce((obj, el) => {
+            obj[decodeURIComponent(el.key)] = decodeURIComponent(el.value);
+
+            return obj;
+          }, {});
+        // console.log(chunksData)
+        // const parseData = JSON.parse(chunksData);
+        // console.log(parseData)
+
+        if (!chunksData.date || !chunksData.title || !chunksData.amount) {
           res.statusCode = 400;
           res.end('Missing required fields');
-          dataStream.write(JSON.stringify({}, null, 2));
+          // dataStream.write(JSON.stringify({}, null, 2));
 
           return;
         }
 
-        dataStream.write(JSON.stringify(parseData, null, 2));
+        // dataStream.write(JSON.stringify(parseData, null, 2));
 
+        fs.writeFileSync('./db/expense.json', JSON.stringify(chunksData));
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        fileStream.pipe(res);
+        res.end(JSON.stringify(chunksData, null, 2));
+        // fileStream.pipe(res);
 
-        fileStream.on('error', () => {
-          res.statusCode = 404;
-          res.end('Not Found');
-        });
+        // fileStream.on('error', () => {
+        //   res.statusCode = 404;
+        //   res.end('Not Found');
+        // });
 
-        dataStream.on('error', () => {
-          res.statusCode = 404;
-          res.end('Not Found');
-        });
+        // dataStream.on('error', () => {
+        //   res.statusCode = 404;
+        //   res.end('Not Found');
+        // });
       });
 
-      req.on('close', () => {
-        dataStream.end();
-        fileStream.destroy();
-      });
+      // req.on('close', () => {
+      //   dataStream.destroy();
+      //   fileStream.destroy();
+      // });
 
       return;
     }
