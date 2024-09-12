@@ -2,39 +2,24 @@
 
 /* eslint-disable no-console */
 const { Server } = require('http');
-const path = require('path');
 const fs = require('fs');
-
 const querystring = require('querystring');
 
 function createServer() {
   const server = new Server();
 
   server.on('request', (req, res) => {
-    const url = new URL(req.url || '', `http://${req.headers.host}`);
-    const requestedPath = url.pathname.slice(1) || 'index.html';
-    const realPath = path.join(__dirname, '..', 'public', requestedPath);
-    const dataPath = path.resolve(__dirname, '..', 'db', 'expense.json');
-
     if (req.url === '/' && req.method === 'GET') {
-      if (!fs.existsSync(realPath)) {
-        res.statusCode = 404;
-        res.end('Not Found');
+      const fileStream = fs.createReadStream('./public/index.html');
 
-        return;
-      }
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html');
 
-      fs.readFile(realPath, 'utf-8', (err, data) => {
-        if (err) {
-          res.statusCode = 500;
-          res.end('error', err);
+      fileStream.pipe(res);
 
-          return;
-        }
-
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/html');
-        res.end(data);
+      fileStream.on('error', () => {
+        res.statusCode = 500;
+        res.end('Server Error');
       });
 
       return;
@@ -48,31 +33,44 @@ function createServer() {
       });
 
       req.on('end', () => {
-        // content-type: application/x-www-form-urlencoded
-        // const parsedData = JSON.parse(chunks); // but have fail in browser
-
-        // this one fail tests but in browser work good header
         const parsedData = querystring.parse(chunks);
+        let jsonData;
 
-        if (!parsedData.date || !parsedData.title || !parsedData.amount) {
-          res.statusCode = 400; // Bad Request
+        try {
+          jsonData = JSON.parse(chunks);
+        } catch (error) {
+          jsonData = parsedData;
+        }
+
+        const date = parsedData.date || jsonData.date;
+        const title = parsedData.title || jsonData.title;
+        const amount = parsedData.amount || jsonData.amount;
+
+        if (!date || !title || !amount) {
+          res.statusCode = 404;
+          res.setHeader('Content-Type', 'text/plain');
           res.end('Missing required fields');
 
           return;
         }
 
-        fs.writeFile(dataPath, JSON.stringify(parsedData, null, 2), (err) => {
-          if (err) {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('Internal Server Error');
+        fs.writeFile(
+          './db/expense.json',
+          JSON.stringify({ date, title, amount }, null, 2),
+          (error) => {
+            if (error) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'text/plain');
+              res.end('Server Error');
 
-            return;
-          }
+              return;
+            }
 
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(parsedData, null, 2));
-        });
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ date, title, amount }, null, 2));
+          },
+        );
       });
 
       return;
