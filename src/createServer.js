@@ -25,7 +25,7 @@ function createServer() {
           res.end(data);
         }
       });
-    } else if (pathname === '/submit-expense' && req.method === 'POST') {
+    } else if (pathname === '/add-expense' && req.method === 'POST') {
       let body = '';
 
       req.on('data', (chunk) => {
