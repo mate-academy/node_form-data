@@ -25,7 +25,7 @@ function createServer() {
           res.end(data);
         }
       });
-    } else if (pathname === '/submit' && req.method === 'POST') {
+    } else if (pathname === '/submit-expense' && req.method === 'POST') {
       let body = '';
 
       req.on('data', (chunk) => {
@@ -33,24 +33,39 @@ function createServer() {
       });
 
       req.on('end', () => {
-        const form = parse(body);
+        let form;
+
+        try {
+          form = JSON.parse(body);
+        } catch {
+          form = parse(body);
+        }
+
         const { date, title, amount } = form;
+
+        if (!date || !title || !amount) {
+          res.writeHead(400, { 'Content-Type': 'text/plain' });
+          res.end('Missing required fields');
+
+          return;
+        }
 
         const exp = { date, title, amount };
 
         fs.readFile(expFile, 'utf8', (err, data) => {
-          let expenses;
+          let expenses = [];
 
           if (err && err.code === 'ENOENT') {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('Server error');
-
-            return;
-          }
-
-          if (data) {
+            expenses = [];
+          } else if (!err) {
             try {
-              expenses = JSON.parse(data);
+              const parsedData = JSON.parse(data);
+
+              if (Array.isArray(parsedData)) {
+                expenses = parsedData;
+              } else {
+                expenses = [];
+              }
             } catch (parseError) {
               res.writeHead(500, { 'Content-Type': 'text/plain' });
               res.end('Invalid JSON format');
@@ -59,13 +74,9 @@ function createServer() {
             }
           }
 
-          if (!Array.isArray(expenses)) {
-            expenses = [expenses];
-          }
-
           expenses.push(exp);
 
-          fs.writeFile(expFile, JSON.stringify(expenses, null, 2), (error) => {
+          fs.writeFile(expFile, JSON.stringify(exp, null, 2), (error) => {
             if (error) {
               res.writeHead(500, { 'Content-Type': 'text/plain' });
               res.end('Server error 3');
@@ -73,7 +84,7 @@ function createServer() {
               return;
             }
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(expenses, null, 2));
+            res.end(JSON.stringify(exp, null, 2));
           });
         });
       });
