@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>node_form_data</title>
+  </head>
+  <body>
+    <form action="/submit-expense" method="POST">
+      <label for="dateField">date</label>
+      <input name="date" id="dateField" type="date" required />
+
+      <label for="titleField">title</label>
+      <input name="title" id="titleField" type="text" required />
+
+      <label for="amountField">amount</label>
+      <input name="amount" id="amountField" type="number" required />
+
+      <button type="submit" style="width: 80px; height: 22px">Submit</button>
+    </form>
+  </body>
+</html>
