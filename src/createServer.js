@@ -44,14 +44,7 @@ function createServer() {
 
       req.on('end', () => {
         const formData = Buffer.concat(chunks).toString();
-
         const { date, title, amount } = JSON.parse(formData);
-
-        // This commented-out version of the solution does not pass the tests.
-        // const searchParams = new URLSearchParams(formData);
-        // const amount = searchParams.get('amount');
-        // const date = searchParams.get('date');
-        // const title = searchParams.get('title');
 
         if (!date || !title || !amount) {
           res.statusCode = 400;
