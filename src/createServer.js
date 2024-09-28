@@ -8,18 +8,8 @@ function createServer() {
   const server = new Server();
 
   server.on('request', async (req, res) => {
-    if (req.url === '/submit-expense' && req.method === 'POST') {
-      const FILE_WITH_DATA = './public/file.txt';
-
-      if (fs.existsSync(FILE_WITH_DATA)) {
-        try {
-          await fs.promises.unlink(FILE_WITH_DATA);
-        } catch {
-          res.writeHead(400, { 'Content-Type': 'text/plain' });
-
-          return res.end('Cant clear a file before writing new data');
-        }
-      }
+    if (req.url === '/add-expense' && req.method === 'POST') {
+      const FILE_WITH_DATA = './db/expense.json';
 
       const form = new formidable.IncomingForm();
 
@@ -36,25 +26,28 @@ function createServer() {
           return res.end('All filds should be filled');
         }
 
-        const date = fields.date[0];
-        const title = fields.title[0];
-        const amount = fields.amount[0];
+        const expensesData = {
+          date: fields.date,
+          title: fields.title,
+          amount: fields.amount,
+        };
 
         try {
-          await fs.promises.appendFile(FILE_WITH_DATA, `${date}\n`);
-          await fs.promises.appendFile(FILE_WITH_DATA, `${title}\n`);
-          await fs.promises.appendFile(FILE_WITH_DATA, `${amount}\n`);
+          await fs.promises.writeFile(
+            FILE_WITH_DATA,
+            JSON.stringify(expensesData, null, 2),
+          );
         } catch {
           res.writeHead(500, { 'Content-Type': 'text/plain' });
 
-          return res.end('Error appending data to file');
+          return res.end('Error writing data to JSON file');
         }
 
         const fileStream = fs.createReadStream(FILE_WITH_DATA, 'utf8');
 
         res.writeHead(200, {
-          'Content-Type': 'text/html',
-          'Content-Disposition': 'inline; filename=asd',
+          'Content-Type': 'application/json',
+          'Content-Disposition': 'inline',
         });
 
         fileStream
@@ -66,7 +59,7 @@ function createServer() {
 
         res.on('finish', () => fileStream.destroy());
       });
-    } else if (req.url === '/') {
+    } else if (req.url === '/' && req.method === 'GET') {
       const FORM_PAGE = './public/index.html';
 
       if (!fs.existsSync(FORM_PAGE)) {
@@ -78,7 +71,7 @@ function createServer() {
 
       const fileStream = fs.createReadStream(FORM_PAGE, 'utf8');
 
-      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.statusCode = 200;
       fileStream.pipe(res);
 
       fileStream.on('error', () => {
