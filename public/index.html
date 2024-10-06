@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form data</title>
+  </head>
+  <body>
+    <h1>Form data for expense (with Node.js)</h1>
+    <form action="/add-expense" method="POST">
+      <input
+        type="date"
+        name="date"
+        id="dateInput"
+        value="2005-05-05"
+        required
+      />
+      <input
+        type="text"
+        name="title"
+        id="title"
+        placeholder="Insert title for expense"
+        value="hello"
+        required
+      />
+      <input
+        type="number"
+        name="amount"
+        value="1"
+        id="amount"
+        placeholder="Insert an amount"
+        required
+      />
+      <button id="submit">Send request</button>
+    </form>
+  </body>
+</html>
