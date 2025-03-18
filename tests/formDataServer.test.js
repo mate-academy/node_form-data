@@ -47,8 +47,8 @@ describe('Form Data Server', () => {
           title: 'Test Expense',
           amount: '100',
         };
+        // console.log('-----', response.data);
         const response = await axios.post(`${HOST}/add-expense`, expense);
-
         expect(response.status).toBe(200);
 
         const savedData = JSON.parse(fs.readFileSync(dataPath));
