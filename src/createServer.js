@@ -21,13 +21,13 @@ function createServer() {
       return;
     }
 
-    if (req.method === 'GET' && url.pathname === '/saveData') {
+    if (req.method === 'GET' && url.pathname === '/add-expense') {
       res.statusCode = 400;
 
       return res.end('Only POST method allowed');
     }
 
-    if (req.method === 'POST' && url.pathname === '/saveData') {
+    if (req.method === 'POST' && url.pathname === '/add-expense') {
       let body = '';
 
       req.on('data', (chunk) => {
