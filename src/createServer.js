@@ -85,7 +85,7 @@ function createServer() {
                   parsedData.push(dataObject);
                 }
 
-                parsedData = dataObject;
+                parsedData = [dataObject];
               }
 
               const newData = JSON.stringify(parsedData, null, 2);
