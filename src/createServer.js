@@ -81,15 +81,11 @@ function createServer() {
               parsedData = JSON.parse(fileData);
 
               if (typeof parsedData === 'object') {
-                if (Object.keys(parsedData).length) {
-                  parsedData = [parsedData];
-
-                  parsedData.push(dataObject);
-                } else if (!Object.keys(parsedData).length) {
-                  parsedData = dataObject;
-                } else if (Array.isArray(parsedData)) {
+                if (Array.isArray(parsedData)) {
                   parsedData.push(dataObject);
                 }
+
+                parsedData = dataObject;
               }
 
               const newData = JSON.stringify(parsedData, null, 2);
@@ -110,7 +106,7 @@ function createServer() {
           });
         } catch (err) {
           res.statusCode = 400;
-          res.hasHeader('Content-Type', 'application/json');
+          res.setHeader('Content-Type', 'application/json');
           res.end(`Invalid JSON: ${err.message}`);
         }
       });
