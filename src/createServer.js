@@ -81,11 +81,7 @@ function createServer() {
               parsedData = JSON.parse(fileData);
 
               if (typeof parsedData === 'object') {
-                if (Array.isArray(parsedData)) {
-                  parsedData.push(dataObject);
-                }
-
-                parsedData = [dataObject];
+                parsedData = dataObject;
               }
 
               const newData = JSON.stringify(parsedData, null, 2);
