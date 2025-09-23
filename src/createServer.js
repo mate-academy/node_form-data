@@ -55,8 +55,7 @@ function createServer() {
 
           arr.push(obj);
 
-          fs.writeFileSync('db/expense.json', JSON.stringify(obj, null, 2));
-
+          fs.writeFileSync('db/expense.json', JSON.stringify(arr, null, 2));
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(obj));
         } catch {
