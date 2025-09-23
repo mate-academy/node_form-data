@@ -22,7 +22,6 @@ function createServer() {
       return;
     }
 
-
     if (req.method === 'POST' && req.url === '/add-expense') {
       const chunks = [];
 
