@@ -4,10 +4,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+const DATA_PATH = path.resolve('db', 'expense.json');
+
 function createServer() {
   return http.createServer((req, res) => {
     const indexPath = path.resolve('src', 'index.html');
 
+    
     if (req.method === 'GET' && req.url === '/') {
       try {
         const file = fs.readFileSync(indexPath);
@@ -21,6 +24,7 @@ function createServer() {
 
       return;
     }
+
 
     if (req.method === 'POST' && req.url === '/add-expense') {
       const chunks = [];
@@ -39,23 +43,9 @@ function createServer() {
             return;
           }
 
-          let arr = [];
 
-          try {
-            const file = fs.readFileSync('db/expense.json', 'utf-8');
+          fs.writeFileSync(DATA_PATH, JSON.stringify(obj, null, 2));
 
-            arr = JSON.parse(file);
-
-            if (!Array.isArray(arr)) {
-              arr = [];
-            }
-          } catch {
-            arr = [];
-          }
-
-          arr.push(obj);
-
-          fs.writeFileSync('db/expense.json', JSON.stringify(arr, null, 2));
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(obj));
         } catch {
@@ -63,6 +53,22 @@ function createServer() {
           res.end('Invalid JSON');
         }
       });
+
+      return;
+    }
+    if (req.method === 'GET' && req.url === '/expenses') {
+      try {
+        const data = fs.existsSync(DATA_PATH)
+          ? fs.readFileSync(DATA_PATH, 'utf-8')
+          : '';
+        const obj = data ? JSON.parse(data) : {};
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(obj));
+      } catch {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('Failed to read expense');
+      }
 
       return;
     }
