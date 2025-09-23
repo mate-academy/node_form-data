@@ -7,7 +7,7 @@
   </head>
   <body>
     <h1>Add Expense</h1>
-    <form action="http://localhost:5701/expense" method="post">
+    <form action="http://localhost:5701/add-expense" method="post">
       <label>
         Title:
         <input type="text" name="title" required />
@@ -20,7 +20,11 @@
       </label>
       <br />
 
-
+      <label>
+        Amount:
+        <input type="number" name="amount" step="0.01" required />
+      </label>
+      <br />
 
       <button type="submit">Submit</button>
     </form>

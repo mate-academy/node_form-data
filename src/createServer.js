@@ -39,10 +39,25 @@ function createServer() {
             return;
           }
 
-          fs.writeFileSync('db/expense.json', JSON.stringify(obj, null, 2));
+          let ar = [];
+
+          try {
+            const file = fs.readFileSync('db/expense.json', 'utf-8');
+
+            ar = JSON.parse(file);
+
+            if (!Array.isArray(ar)) {
+              ar = [];
+            }
+          } catch {
+            ar = [];
+          }
+          ar.push(obj);
+
+          fs.writeFileSync('db/expense.json', JSON.stringify(ar, null, 2));
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(obj));
+          res.end(`<pre>${JSON.stringify(obj)}</pre>`);
         } catch (err) {
           res.writeHead(400, { 'Content-Type': 'text/plain' });
           res.end('Invalid JSON');
