@@ -1,26 +1,26 @@
 'use strict';
 
 const http = require('http');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 
 function createServer() {
   return http.createServer((req, res) => {
     const indexPath = path.resolve('src', 'index.html');
 
+   
     if (req.method === 'GET' && req.url === '/') {
       try {
         const file = fs.readFileSync(indexPath);
-
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(file);
       } catch {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('file not found');
       }
-
       return;
     }
+
 
     if (req.method === 'POST' && req.url === '/add-expense') {
       const chunks = [];
@@ -32,33 +32,34 @@ function createServer() {
           const buffer = Buffer.concat(chunks).toString();
           const obj = JSON.parse(buffer);
 
+
           if (!obj.date || !obj.title || !obj.amount) {
             res.writeHead(400, { 'Content-Type': 'text/plain' });
             res.end('Invalid expense data');
-
             return;
           }
 
-          let ar = [];
+          let arr = [];
+
 
           try {
             const file = fs.readFileSync('db/expense.json', 'utf-8');
-
-            ar = JSON.parse(file);
-
-            if (!Array.isArray(ar)) {
-              ar = [];
-            }
+            arr = JSON.parse(file);
+            if (!Array.isArray(arr)) arr = [];
           } catch {
-            ar = [];
+            arr = [];
           }
-          ar.push(obj);
 
-          fs.writeFileSync('db/expense.json', JSON.stringify(ar, null, 2));
+
+          arr.push(obj);
+
+
+          fs.writeFileSync('db/expense.json', JSON.stringify(arr, null, 2));
+
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(obj));
-        } catch (err) {
+        } catch {
           res.writeHead(400, { 'Content-Type': 'text/plain' });
           res.end('Invalid JSON');
         }
@@ -66,6 +67,8 @@ function createServer() {
 
       return;
     }
+
+
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not found');
   });
