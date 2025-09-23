@@ -57,7 +57,7 @@ function createServer() {
           fs.writeFileSync('db/expense.json', JSON.stringify(ar, null, 2));
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(`<pre>${JSON.stringify(obj)}</pre>`);
+          res.end(JSON.stringify(obj));
         } catch (err) {
           res.writeHead(400, { 'Content-Type': 'text/plain' });
           res.end('Invalid JSON');
