@@ -5,71 +5,83 @@ const { Server } = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const ALLOWED_ENDPOINTS = {
-  addExpense: {
-    route: '/add-expense',
-    methods: ['POST'],
-  },
-};
+const dbPath = path.resolve(__dirname, '../db/expense.json');
 
 function createServer() {
-  /* Write your code here */
-  // Return instance of http.Server class
+  // створюємо файл, якщо його немає
+  if (!fs.existsSync(dbPath)) {
+    fs.writeFileSync(dbPath, JSON.stringify([]), 'utf8');
+  }
+
   const server = new Server();
 
   server.on('request', (req, res) => {
-    const baseUrl = `http://${req.headers.host}`;
-    const url = new URL(req.url, baseUrl);
+    // GET /add-expense - HTML форма
+    if (req.url === '/add-expense' && req.method === 'GET') {
+      res.writeHead(200, { 'Content-Type': 'text/html' });
 
-    if (
-      url.pathname !== ALLOWED_ENDPOINTS.addExpense.route ||
-      !ALLOWED_ENDPOINTS.addExpense.methods.includes(req.method)
-    ) {
-      res.statusCode = 404;
-      res.setHeader('Content-Type', 'text/plain');
-
-      res.end('Invalid url');
+      res.end(`
+        <!doctype html>
+        <html lang="en">
+          <head><meta charset="UTF-8" /><title>Add Expense</title></head>
+          <body>
+            <form method="POST" action="/add-expense">
+              <input type="date" name="date" required />
+              <input type="text" name="title" placeholder="Title" required />
+              <input type="text" name="amount" placeholder="Amount" required />
+              <button type="submit">Submit</button>
+            </form>
+          </body>
+        </html>
+      `);
 
       return;
     }
 
-    const bodyChunks = [];
+    // POST /add-expense - додаємо новий запис
+    if (req.url === '/add-expense' && req.method === 'POST') {
+      const bodyChunks = [];
 
-    req.on('data', (chunk) => {
-      bodyChunks.push(chunk);
-    });
+      req.on('data', (chunk) => bodyChunks.push(chunk));
 
-    req.on('end', () => {
-      const json = Buffer.concat(bodyChunks);
-      const expense = JSON.parse(json);
+      req.on('end', () => {
+        const json = Buffer.concat(bodyChunks);
+        const expense = JSON.parse(json);
 
-      if (!expense?.date || !expense?.title || !expense?.amount) {
-        res.statusCode = 400;
-        res.end('Bad user input');
+        if (!expense?.date || !expense?.title || !expense?.amount) {
+          res.statusCode = 400;
+          res.end('Bad user input');
 
-        return;
-      }
+          return;
+        }
 
-      const fileStream = fs.createWriteStream(
-        path.normalize(path.join(__dirname, '../db/expense.json')),
-      );
+        fs.readFile(dbPath, 'utf8', (err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Read error' }));
 
-      fileStream.on('error', (error) => {
-        res.statusCode = 500;
-        res.setHeader('Content-Type', 'text/plain');
-        /* eslint-disable-next-line no-console */
-        console.error(error);
-        res.end('Server error');
+            return;
+          }
+
+          fs.writeFile(dbPath, JSON.stringify(expense, null, 2), (error) => {
+            if (error) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Write error' }));
+
+              return;
+            }
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(expense));
+          });
+        });
       });
 
-      fileStream.on('finish', () => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(expense, null, 2));
-      });
+      return;
+    }
 
-      fileStream.end(json);
-    });
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not found');
   });
 
   return server;
