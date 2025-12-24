@@ -46,7 +46,16 @@ function createServer() {
 
       req.on('end', () => {
         const json = Buffer.concat(bodyChunks);
-        const expense = JSON.parse(json);
+        let expense;
+
+        try {
+          expense = JSON.parse(json.toString());
+        } catch {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid JSON' }));
+
+          return;
+        }
 
         if (!expense?.date || !expense?.title || !expense?.amount) {
           res.statusCode = 400;
@@ -72,6 +81,7 @@ function createServer() {
             }
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
+
             res.end(JSON.stringify(expense));
           });
         });
