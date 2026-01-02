@@ -10,31 +10,14 @@ function renderForm() {
     <html lang="en">
       <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Expense form</title>
       </head>
       <body>
         <h1>Add expense</h1>
-
         <form method="POST" action="/add-expense">
-          <label>
-            Date:
-            <input type="date" name="date" required />
-          </label>
-          <br /><br />
-
-          <label>
-            Title:
-            <input type="text" name="title" required />
-          </label>
-          <br /><br />
-
-          <label>
-            Amount:
-            <input type="number" name="amount" step="0.01" required />
-          </label>
-          <br /><br />
-
+          <input type="date" name="date" required />
+          <input type="text" name="title" required />
+          <input type="number" name="amount" required />
           <button type="submit">Save</button>
         </form>
       </body>
@@ -61,15 +44,15 @@ function readBody(req) {
 }
 
 function parseExpense(req, body) {
-  const contentType = (req.headers['content-type'] || '').toLowerCase();
+  const type = req.headers['content-type'] || '';
 
-  if (contentType.includes('application/json')) {
+  if (type.includes('application/json')) {
     const data = JSON.parse(body || '{}');
 
     return {
-      date: data.date ?? '',
-      title: data.title ?? '',
-      amount: data.amount ?? '',
+      date: data.date || '',
+      title: data.title || '',
+      amount: data.amount || '',
     };
   }
 
@@ -83,7 +66,7 @@ function parseExpense(req, body) {
 }
 
 function isValidExpense(expense) {
-  return Boolean(expense.date && expense.title && expense.amount);
+  return expense.date && expense.title && expense.amount;
 }
 
 function createServer() {
@@ -95,18 +78,17 @@ function createServer() {
       return;
     }
 
-    const isExpensePost =
+    if (
       req.method === 'POST' &&
-      (req.url === '/add-expense' || req.url === '/submit-expense');
-
-    if (isExpensePost) {
+      (req.url === '/add-expense' || req.url === '/submit-expense')
+    ) {
       try {
         const body = await readBody(req);
         const expense = parseExpense(req, body);
 
         if (!isValidExpense(expense)) {
-          res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
-          res.end('Bad request: missing required fields');
+          res.writeHead(400, { 'Content-Type': 'text/plain' });
+          res.end('Bad request');
 
           return;
         }
@@ -117,33 +99,19 @@ function createServer() {
         await fs.mkdir(dbDir, { recursive: true });
         await fs.writeFile(filePath, JSON.stringify(expense, null, 2), 'utf-8');
 
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-
-        res.end(`
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8" />
-              <title>Saved expense</title>
-            </head>
-            <body>
-              <h1>Saved expense</h1>
-              <pre>${JSON.stringify(expense, null, 2)}</pre>
-              <a href="/">Back</a>
-            </body>
-          </html>
-        `);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(expense));
 
         return;
-      } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-        res.end('Server error');
+      } catch {
+        res.writeHead(500);
+        res.end();
 
         return;
       }
     }
 
-    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not found');
   });
 }
