@@ -117,8 +117,22 @@ function createServer() {
         await fs.mkdir(dbDir, { recursive: true });
         await fs.writeFile(filePath, JSON.stringify(expense, null, 2), 'utf-8');
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(expense));
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+
+        res.end(`
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <title>Saved expense</title>
+            </head>
+            <body>
+              <h1>Saved expense</h1>
+              <pre>${JSON.stringify(expense, null, 2)}</pre>
+              <a href="/">Back</a>
+            </body>
+          </html>
+        `);
 
         return;
       } catch (err) {
