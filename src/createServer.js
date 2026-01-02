@@ -4,27 +4,6 @@ const http = require('http');
 const fs = require('fs/promises');
 const path = require('path');
 
-function renderForm() {
-  return `
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8" />
-        <title>Expense form</title>
-      </head>
-      <body>
-        <h1>Add expense</h1>
-        <form method="POST" action="/add-expense">
-          <input type="date" name="date" required />
-          <input type="text" name="title" required />
-          <input type="number" name="amount" required />
-          <button type="submit">Save</button>
-        </form>
-      </body>
-    </html>
-  `;
-}
-
 function readBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -72,8 +51,12 @@ function isValidExpense(expense) {
 function createServer() {
   return http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url === '/') {
+      const htmlPath = path.join(__dirname, '..', 'index.html');
+
+      const html = await fs.readFile(htmlPath, 'utf-8');
+
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(renderForm());
+      res.end(html);
 
       return;
     }
