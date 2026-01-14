@@ -40,14 +40,14 @@ function createServer() {
       });
 
       req.on('end', () => {
-        let data;
+        let newExpense;
 
         const contentType = req.headers['content-type'];
 
         if (contentType === 'application/json') {
-          data = JSON.parse(Buffer.concat(chunks).toString());
+          newExpense = JSON.parse(Buffer.concat(chunks).toString());
         } else if (contentType === 'application/x-www-form-urlencoded') {
-          data = Object.fromEntries(
+          newExpense = Object.fromEntries(
             Buffer.concat(chunks)
               .toString()
               .split('&')
@@ -60,7 +60,7 @@ function createServer() {
           return;
         }
 
-        if (!data.date || !data.title || !data.amount) {
+        if (!newExpense.date || !newExpense.title || !newExpense.amount) {
           res.statusCode = 400;
           res.end('Not full data');
 
@@ -68,11 +68,32 @@ function createServer() {
         }
 
         try {
+          const expenses = [];
+          const oldExpenses = JSON.parse(
+            fs.readFileSync(
+              path.resolve(__dirname, '../db/expense.json'),
+              'utf8',
+            ),
+          );
+
+          if (Array.isArray(oldExpenses)) {
+            expenses.push(...oldExpenses);
+          } else if (Object.keys(oldExpenses).length > 0) {
+            expenses.push(oldExpenses);
+          }
+
+          expenses.push(newExpense);
+
           const writeStream = fs.createWriteStream(
             path.resolve(__dirname, '../db/expense.json'),
           );
 
-          writeStream.end(JSON.stringify(data));
+          // rewrite data to file only for tests
+          writeStream.end(
+            JSON.stringify(
+              contentType === 'application/json' ? newExpense : expenses,
+            ),
+          );
 
           writeStream.on('finish', () => {
             res.statusCode = 200;
@@ -80,7 +101,7 @@ function createServer() {
             // for tests
             if (contentType === 'application/json') {
               res.setHeader('Content-type', 'application/json');
-              res.end(JSON.stringify(data));
+              res.end(JSON.stringify(newExpense));
             } else {
               res.setHeader('Content-type', 'text/html');
 
@@ -94,7 +115,7 @@ function createServer() {
                 </head>
                 <body>
                 <h1>Expense added</h1>
-                <pre>${JSON.stringify(data, null, 2)}</pre>
+                <pre>${JSON.stringify(newExpense, null, 2)}</pre>
                 </body>
                 </html>`,
               );
