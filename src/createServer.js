@@ -88,7 +88,7 @@ function createServer() {
             path.resolve(__dirname, '../db/expense.json'),
           );
 
-          // rewrite data to file only for tests
+          // the tests expect the file to be rewritten
           writeStream.end(
             JSON.stringify(
               contentType === 'application/json' ? newExpense : expenses,
