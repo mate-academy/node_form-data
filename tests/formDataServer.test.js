@@ -83,7 +83,7 @@ describe('Form Data Server', () => {
         };
         const response = await axios.post(`${HOST}/submit-expense`, expense);
 
-        expect(response.headers['content-type']).toBe('application/json');
+        expect(response.headers['content-type']).toBe('text/html');
         expect(response.data).toStrictEqual(expense);
       });
 

@@ -25,44 +25,42 @@ function createServer() {
     }
 
     if (pathname === '/submit-expense' && req.method === 'POST') {
-      if (req.method === 'POST') {
-        const chunks = [];
+      const chunks = [];
 
-        req.on('data', (chunk) => {
-          chunks.push(chunk);
-        });
+      req.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
 
-        req.on('end', () => {
-          const body = Buffer.concat(chunks).toString();
-          const data = JSON.parse(body);
+      req.on('end', () => {
+        const body = Buffer.concat(chunks).toString();
+        const data = JSON.parse(body);
 
-          if (!data) {
-            res.statusCode = 404;
-            res.setHeader('Content-Type', 'text/plain');
-            res.end('Invalid Request');
+        if (!data) {
+          res.statusCode = 404;
+          res.setHeader('Content-Type', 'text/plain');
+          res.end('Invalid Request');
 
-            return;
-          }
+          return;
+        }
 
-          const { date, title, amount } = data;
+        const { date, title, amount } = data;
 
-          if (!date || !title || !amount) {
-            res.statusCode = 404;
-            res.setHeader('Content-Type', 'text/plain');
-            res.end('Invalid Request');
+        if (!date || !title || !amount) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'text/plain');
+          res.end('Bad Request');
 
-            return;
-          }
+          return;
+        }
 
-          fs.writeFileSync('db/expense.json', body);
+        fs.writeFile('db/expense.json', body);
 
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(data));
-        });
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(data));
+      });
 
-        return;
-      }
+      return;
     }
 
     res.setHeader('Content-Type', 'text/html');
