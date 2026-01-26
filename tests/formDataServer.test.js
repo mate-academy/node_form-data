@@ -10,7 +10,7 @@ const { Server, Agent } = require('http');
 // this prevents `socket hang up` for Node.js 20.10+
 axios.defaults.httpAgent = new Agent({ keepAlive: false });
 
-const PORT = 5701;
+const PORT = 5703;
 const HOST = `http://localhost:${PORT}`;
 
 describe('Form Data Server', () => {
@@ -47,7 +47,7 @@ describe('Form Data Server', () => {
           title: 'Test Expense',
           amount: '100',
         };
-        const response = await axios.post(`${HOST}/add-expense`, expense);
+        const response = await axios.post(`${HOST}/submit-expense`, expense);
 
         expect(response.status).toBe(200);
 
@@ -67,7 +67,7 @@ describe('Form Data Server', () => {
         expect.assertions(2);
 
         try {
-          await axios.post(`${HOST}/add-expense`, expense);
+          await axios.post(`${HOST}/submit-expense`, expense);
         } catch (err) {
           expect(err.response.data.length).toBeGreaterThan(0);
 
@@ -81,9 +81,9 @@ describe('Form Data Server', () => {
           title: 'Test Expense',
           amount: '100',
         };
-        const response = await axios.post(`${HOST}/add-expense`, expense);
+        const response = await axios.post(`${HOST}/submit-expense`, expense);
 
-        expect(response.headers['content-type']).toBe('application/json');
+        expect(response.headers['content-type']).toBe('text/html');
         expect(response.data).toStrictEqual(expense);
       });
 
