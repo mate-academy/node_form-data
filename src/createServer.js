@@ -48,12 +48,13 @@ function parseBody(rawBody, contentType = '') {
 function isValidExpense(expense) {
   return (
     expense &&
+    typeof expense === 'object' &&
     typeof expense.date === 'string' &&
     typeof expense.title === 'string' &&
     typeof expense.amount === 'string' &&
-    expense.date &&
-    expense.title &&
-    expense.amount
+    expense.date.trim() &&
+    expense.title.trim() &&
+    expense.amount.trim()
   );
 }
 
@@ -69,6 +70,7 @@ function createServer() {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Add expense</title>
 </head>
 <body>
@@ -87,9 +89,10 @@ function createServer() {
 
     if (method === 'POST' && url === '/add-expense') {
       const rawBody = await readBody(req);
-      const parsed = parseBody(rawBody, req.headers['content-type'] || '');
+      const contentType = String(req.headers['content-type'] || '');
+      const expense = parseBody(rawBody, contentType);
 
-      if (!isValidExpense(parsed)) {
+      if (!isValidExpense(expense)) {
         res.statusCode = 400;
         res.setHeader('Content-Type', 'text/plain');
         res.end('Invalid expense data');
@@ -97,11 +100,11 @@ function createServer() {
         return;
       }
 
-      fs.writeFileSync(dataPath, JSON.stringify(parsed, null, 2));
+      fs.writeFileSync(dataPath, JSON.stringify(expense, null, 2));
 
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(parsed));
+      res.end(JSON.stringify(expense));
 
       return;
     }
