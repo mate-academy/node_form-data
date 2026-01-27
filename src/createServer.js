@@ -20,7 +20,7 @@ function readBody(req) {
 
 function parseBody(rawBody, contentType = '') {
   if (!rawBody) {
-    return {};
+    return null;
   }
 
   if (contentType.includes('application/json')) {
@@ -48,19 +48,18 @@ function parseBody(rawBody, contentType = '') {
 function isValidExpense(expense) {
   return (
     expense &&
-    typeof expense === 'object' &&
     typeof expense.date === 'string' &&
-    expense.date.length > 0 &&
     typeof expense.title === 'string' &&
-    expense.title.length > 0 &&
     typeof expense.amount === 'string' &&
-    expense.amount.length > 0
+    expense.date &&
+    expense.title &&
+    expense.amount
   );
 }
 
 function createServer() {
   return http.createServer(async (req, res) => {
-    const { url, method } = req;
+    const { method, url } = req;
 
     if (method === 'GET' && url === '/') {
       res.statusCode = 200;
@@ -70,27 +69,14 @@ function createServer() {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Add expense</title>
 </head>
 <body>
   <h1>Add expense</h1>
-  <form action="/add-expense" method="POST">
-    <label>
-      Date
-      <input type="date" name="date" required />
-    </label>
-    <br />
-    <label>
-      Title
-      <input type="text" name="title" required />
-    </label>
-    <br />
-    <label>
-      Amount
-      <input type="text" name="amount" required />
-    </label>
-    <br />
+  <form method="POST" action="/add-expense">
+    <label>Date <input type="date" name="date" required></label><br>
+    <label>Title <input type="text" name="title" required></label><br>
+    <label>Amount <input type="text" name="amount" required></label><br>
     <button type="submit">Save</button>
   </form>
 </body>
@@ -101,8 +87,7 @@ function createServer() {
 
     if (method === 'POST' && url === '/add-expense') {
       const rawBody = await readBody(req);
-      const contentType = String(req.headers['content-type'] || '');
-      const parsed = parseBody(rawBody, contentType);
+      const parsed = parseBody(rawBody, req.headers['content-type'] || '');
 
       if (!isValidExpense(parsed)) {
         res.statusCode = 400;
