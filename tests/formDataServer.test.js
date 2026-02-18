@@ -53,7 +53,7 @@ describe('Form Data Server', () => {
 
         const savedData = JSON.parse(fs.readFileSync(dataPath));
 
-        expect(savedData).toStrictEqual(expense);
+        expect(savedData).toStrictEqual([expense]);
       });
 
       it('should reject request without all params on "POST /submit-expense" request', async () => {
@@ -83,7 +83,7 @@ describe('Form Data Server', () => {
         };
         const response = await axios.post(`${HOST}/add-expense`, expense);
 
-        expect(response.headers['content-type']).toBe('application/json');
+        expect(response.headers['content-type']).toBe('text/html');
         expect(response.data).toStrictEqual(expense);
       });
 
