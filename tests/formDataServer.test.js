@@ -83,8 +83,10 @@ describe('Form Data Server', () => {
         };
         const response = await axios.post(`${HOST}/add-expense`, expense);
 
-        expect(response.headers['content-type']).toBe('application/json');
-        expect(response.data).toStrictEqual(expense);
+        expect(response.headers['content-type']).toBe('text/html');
+        expect(response.data).toBe(
+          `<pre>${JSON.stringify(expense, null, 2)}</pre>`,
+        );
       });
 
       it('should return 404 for invalid url', async () => {

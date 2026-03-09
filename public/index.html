@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Form</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <form id="expenseForm">
+    <h1>Add Expense</h1>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" step="0.01" required>
+
+    <button type="submit">Submit Expense</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById('expenseForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        date: document.getElementById('date').value,
+        title: document.getElementById('title').value,
+        amount: document.getElementById('amount').value,
+      };
+
+      try {
+        const response = await fetch('/add-expense', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.text();
+
+        if (response.ok) {
+          resultDiv.innerHTML = `
+            <div class="success">
+              <h2>Expense Saved Successfully!</h2>
+              ${data}
+            </div>
+          `;
+          form.reset();
+        } else {
+          resultDiv.innerHTML = `
+            <div class="error">
+              <h2>Error</h2>
+              <p>${data}</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `
+          <div class="error">
+            <h2>Error</h2>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
