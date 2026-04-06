@@ -10,6 +10,16 @@ function createServer() {
   server.on('request', (req, res) => {
     const baseUrl = req.url;
     const dbPath = path.resolve('db', 'expense.json');
+    const mainPath = path.resolve('public', 'index.html');
+
+    if (baseUrl === '/') {
+      const stream = fs.createReadStream(mainPath);
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html');
+
+      return res.pipe(stream);
+    }
 
     if (baseUrl === '/add-expense') {
       if (req.method !== 'POST') {
@@ -41,9 +51,9 @@ function createServer() {
           fs.writeFileSync(dbPath, JSON.stringify(data));
 
           res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
+          res.setHeader('Content-Type', 'text/html');
 
-          return res.end(JSON.stringify(data));
+          return res.end(`<pre>${JSON.stringify(data)}</pre>`);
         } catch (e) {
           res.statusCode = 400;
           res.setHeader('Content-Type', 'application/json');
