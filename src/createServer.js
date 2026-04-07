@@ -51,9 +51,9 @@ function createServer() {
           fs.writeFileSync(dbPath, JSON.stringify(data));
 
           res.statusCode = 200;
-          res.setHeader('Content-Type', 'text/html');
+          res.setHeader('Content-Type', 'application/json');
 
-          return res.end(`<pre>${JSON.stringify(data)}</pre>`);
+          return res.end(JSON.stringify(data));
         } catch (e) {
           res.statusCode = 400;
           res.setHeader('Content-Type', 'application/json');
