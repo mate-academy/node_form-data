@@ -80,23 +80,29 @@ function createServer() {
             }
 
             if (!fs.existsSync(filePath)) {
-              fs.writeFileSync(filePath, JSON.stringify({}));
+              fs.writeFileSync(filePath, JSON.stringify([]));
             }
 
-            // const raw = fs.readFileSync(filePath, 'utf8');
-            // const arr = JSON.parse(raw);
             const record = {
               date: expenseData.date,
               title: expenseData.title,
               amount: expenseData.amount,
             };
 
-            // arr.push(record);
-
             fs.writeFileSync(filePath, JSON.stringify(record, null, 2));
 
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(expenseData));
+            if (req.headers['content-type'] === 'application/json') {
+              // JSON запит — повертай JSON
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify(record));
+            } else {
+              // HTML форма — повертай HTML
+              res.writeHead(200, { 'Content-Type': 'text/html' });
+
+              const html = `<pre>${JSON.stringify(record, null, 2)}</pre>`;
+
+              res.end(html);
+            }
           }
         });
       }
