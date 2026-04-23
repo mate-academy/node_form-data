@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form data</title>
+  </head>
+  <body>
+    <h1>Form data for expense</h1>
+    <form action="/add-expense" method="POST">
+      <label for="date">Date:</label><br>
+      <input
+        type="date"
+        name="date"
+        id="date"
+        required
+      />
+
+      <br><br>
+
+      <label for="title">Title:</label><br>
+      <input
+        id="title"
+        name="title"
+        type="text"
+        required
+      />
+
+      <br><br>
+
+      <label for="amount">Amount:</label><br>
+      <input
+        type="number"
+        name="amount"
+        id="amount"
+        required
+      />
+
+      <br><br>
+
+      <button type="submit">Send request</button>
+    </form>
+  </body>
+</html>
