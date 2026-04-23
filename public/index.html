@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/versions/bulma-no-dark-mode.min.css" />
+    <title>Form data</title>
+  </head>
+  <body>
+    <div class="container is-max-tablet">
+      <section class="hero">
+        <div class="hero-body">
+          <p class="title">Form data</p>
+          <p class="subtitle">Add an expense</p>
+        </div>
+      </section>
+
+      <div class="box">
+        <form action="/add-expense" method="POST" enctype="application/x-www-form-urlencoded" name="formData">
+          <div class="field">
+            <label class="label">Date</label>
+            <div class="control">
+              <input class="input" type="date" name="date"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                name="title"
+                placeholder="e.g. boxes"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Amount</label>
+            <div class="control">
+              <input
+                class="input"
+                type="number"
+                name="amount"
+                placeholder="e.g. 5"
+              />
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit">Submit</button>
+            </div>
+            <div class="control">
+              <button class="button is-link is-light" type="reset">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </body>
+</html>
