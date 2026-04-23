@@ -1,0 +1,17 @@
+<!-- views/form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense Form</title>
+</head>
+<body>
+  <h1>Enter Expense</h1>
+  <form action="/add-expense" method="POST">
+    <label>Date: <input type="date" name="date" required /></label><br>
+    <label>Title: <input type="text" name="title" required /></label><br>
+    <label>Amount: <input type="number" step="0.01" name="amount" required /></label><br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
