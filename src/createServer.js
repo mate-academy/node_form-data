@@ -1,8 +1,118 @@
 'use strict';
 
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const dataPath = path.resolve(__dirname, '../db/expense.json');
+
+function readBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+
+    req.on('end', () => resolve(body));
+  });
+}
+
+function parseBody(rawBody, contentType = '') {
+  if (!rawBody) {
+    return null;
+  }
+
+  if (contentType.includes('application/json')) {
+    try {
+      return JSON.parse(rawBody);
+    } catch {
+      return null;
+    }
+  }
+
+  if (contentType.includes('application/x-www-form-urlencoded')) {
+    const params = new URLSearchParams(rawBody);
+    const obj = {};
+
+    for (const [key, value] of params.entries()) {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  return null;
+}
+
+function isValidExpense(expense) {
+  return (
+    expense &&
+    typeof expense === 'object' &&
+    typeof expense.date === 'string' &&
+    typeof expense.title === 'string' &&
+    typeof expense.amount === 'string' &&
+    expense.date.trim() &&
+    expense.title.trim() &&
+    expense.amount.trim()
+  );
+}
+
 function createServer() {
-  /* Write your code here */
-  // Return instance of http.Server class
+  return http.createServer(async (req, res) => {
+    const { method, url } = req;
+
+    if (method === 'GET' && url === '/') {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html');
+
+      res.end(`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add expense</title>
+</head>
+<body>
+  <h1>Add expense</h1>
+  <form method="POST" action="/add-expense">
+    <label>Date <input type="date" name="date" required></label><br>
+    <label>Title <input type="text" name="title" required></label><br>
+    <label>Amount <input type="text" name="amount" required></label><br>
+    <button type="submit">Save</button>
+  </form>
+</body>
+</html>`);
+
+      return;
+    }
+
+    if (method === 'POST' && url === '/add-expense') {
+      const rawBody = await readBody(req);
+      const contentType = String(req.headers['content-type'] || '');
+      const expense = parseBody(rawBody, contentType);
+
+      if (!isValidExpense(expense)) {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('Invalid expense data');
+
+        return;
+      }
+
+      fs.writeFileSync(dataPath, JSON.stringify(expense, null, 2));
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(expense));
+
+      return;
+    }
+
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Not found');
+  });
 }
 
 module.exports = {
