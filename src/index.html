@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Data</title>
+  </head>
+  <body>
+    <form
+      action="/add-expense"
+      method="POST"
+      id="form-data"
+      style="
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 200px;
+        margin-inline: auto;
+      "
+    >
+      <input type="date" name="date" id="date" />
+      <input type="text" name="title" />
+      <input type="number" name="amount" id="amount" />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
