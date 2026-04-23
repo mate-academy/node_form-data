@@ -1,5 +1,12 @@
-{
-  "date": "2024-01-25",
-  "title": "Test Expense",
-  "amount": "100"
-}
+[
+  {
+    "date": "1212-12-12",
+    "title": "kk",
+    "amount": "12"
+  },
+  {
+    "date": "1111-11-11",
+    "title": "hh",
+    "amount": "11"
+  }
+]
