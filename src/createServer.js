@@ -3,7 +3,6 @@
 
 const { Server } = require('node:http');
 const fs = require('node:fs');
-const { pipeline } = require('node:stream');
 
 function createServer() {
   const server = new Server();
@@ -12,28 +11,18 @@ function createServer() {
     const url = req.url;
     const method = req.method;
 
+    const template = fs.readFileSync('public/index.html', 'utf-8');
+    const dbData = fs.readFileSync('db/expense.json', 'utf-8');
+
     if (method === 'GET' && url === '/') {
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
-      const file = fs.createReadStream('public/index.html');
+      const formattedJson = JSON.stringify(JSON.parse(dbData), null, 2);
+      const html = template.replace('{{jsonData}}', formattedJson);
 
-      file.on('error', () => {
-        res.statusCode = 404;
-        res.end('No such file');
-      });
-
-      file.on('close', () => {
-        console.log('connection close');
-        file.destroy();
-      });
-
-      pipeline(file, res, (err) => {
-        if (err) {
-          res.end();
-        }
-      });
-    } else if (method === 'POST') {
+      return res.end(html);
+    } else if (method === 'POST' && url === '/add-expense') {
       let body = '';
 
       req.on('data', (chunk) => {
@@ -41,19 +30,37 @@ function createServer() {
       });
 
       req.on('end', () => {
-        const params = new URLSearchParams(body);
+        const contentType = req.headers['content-type'];
+        let expense;
 
-        const expense = {
-          date: params.get('date'),
-          title: params.get('title'),
-          amount: params.get('amount'),
-        };
+        if (contentType === 'application/json') {
+          expense = JSON.parse(body);
+        } else {
+          const params = new URLSearchParams(body);
 
-        const jsonData = JSON.stringify(expense);
+          expense = {
+            date: params.get('date'),
+            title: params.get('title'),
+            amount: params.get('amount'),
+          };
+        }
+
+        if (!expense.date || !expense.title || !expense.amount) {
+          res.statusCode = 400;
+
+          return res.end('Missing parameters');
+        }
+
+        const jsonData = JSON.stringify(expense, null, 2);
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
         fs.writeFileSync('db/expense.json', jsonData);
 
-        res.end();
+        const newHtml = template.replace('{{jsonData}}', jsonData);
+
+        res.end(newHtml);
       });
     } else {
       res.statusCode = 404;
