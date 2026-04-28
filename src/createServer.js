@@ -51,8 +51,7 @@ function createServer() {
           values = Object.fromEntries(params);
         }
 
-        // only for tests
-        if (values.date === undefined) {
+        if (!values.date || !values.title || !values.amount) {
           res.statusCode = 400;
           res.setHeader('Content-Type', 'text/plain');
           res.end('Missing required fields');
