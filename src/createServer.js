@@ -64,7 +64,7 @@ function createServer() {
 
         fs.writeFileSync(dataPath, JSON.stringify(values, null, 2));
 
-        const responseHTML = `<html<pre>${JSON.stringify(values, null, 2)}</pre>`;
+        const responseHTML = `<html><pre>${JSON.stringify(values, null, 2)}</pre></html>`;
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/html');
