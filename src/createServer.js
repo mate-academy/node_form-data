@@ -24,38 +24,70 @@ function createServer() {
 
       req.on('end', () => {
         const body = Buffer.concat(chunks).toString();
-        const result = {};
+        const contentType = req.headers['content-type']
+          ? req.headers['content-type'].split(';')[0].trim()
+          : '';
 
-        body.split('&').forEach((pair) => {
-          const [key, value] = pair.split('=');
+        let result = null;
 
-          if (!value) {
+        if (contentType === 'application/json') {
+          try {
+            result = JSON.parse(body);
+          } catch (err) {
+            res.statusCode = 400;
+            res.end('Bad Request');
+
+            return;
+          }
+        } else if (contentType === 'application/x-www-form-urlencoded') {
+          result = {};
+
+          body.split('&').forEach((pair) => {
+            const [key, value] = pair.split('=');
+
+            if (!key || value === undefined) {
+              result = null;
+
+              res.statusCode = 400;
+              res.end('Bad Request');
+
+              return;
+            }
+            result[key] = decodeURIComponent(value.replace(/\+/g, ' '));
+          });
+        } else {
+          try {
+            result = JSON.parse(body);
+          } catch (err) {
+            result = null;
+
             res.statusCode = 400;
             res.end('Bad Request');
           }
-          result[key] = value;
-        });
+        }
 
-        if (!result.date || !result.title || !result.amount) {
+        const requiredFields = ['date', 'title', 'amount'];
+
+        if (
+          !result ||
+          typeof result !== 'object' ||
+          !requiredFields.every((key) => key in result)
+        ) {
           res.statusCode = 400;
           res.end('Bad Request');
 
           return;
         }
 
-        const updatedExpenses = JSON.stringify(result);
+        if (!fs.existsSync(path.dirname(expensePath))) {
+          fs.mkdirSync(path.dirname(expensePath), { recursive: true });
+        }
 
-        const writeStream = fs.createWriteStream(expensePath);
+        fs.writeFileSync(expensePath, JSON.stringify(result));
 
-        writeStream.write(updatedExpenses);
-        writeStream.end();
-
-        writeStream.on('finish', () => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'text/html');
-
-          res.end(`<html><pre>${JSON.stringify(result, null, 2)}</pre></html>`);
-        });
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html');
+        res.end(`<html><pre>${JSON.stringify(result, null, 2)}</pre></html>`);
       });
     } else {
       if (!fs.existsSync(filePath)) {
