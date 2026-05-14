@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense form</title>
+</head>
+<body>
+  <h1>Add Expense</h1>
+  <form action="/add-expense" method="POST">
+    <label>
+      Date:
+      <input type="date" name="date" />
+    </label>
+    <br />
+    <label>
+      Title:
+      <input type="text" name="title" />
+    </label>
+    <br />
+    <label>
+      Amount:
+      <input type="number" name="amount" />
+    </label>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
