@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+  </head>
+  <body>
+    <h1>Expense Tracker</h1>
+
+    <form action="/add-expense" method="POST">
+      <label for="date">
+        Date:
+        <input type="date" id="date" name="date" required />
+      </label>
+      <br />
+      <label for="title">
+        Title:
+        <input type="text" id="title" name="title" required />
+      </label>
+      <br />
+      <label for="amount">
+        Amount:
+        <input type="number" id="amount" name="amount" required />
+      </label>
+      <br />
+
+      <button type="submit">Add Expense</button>
+    </form>
+  </body>
+</html>
