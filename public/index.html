@@ -1,0 +1,71 @@
+<!doctype html>
+<html class="theme-light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Form Data</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Form Data</h1>
+
+        <form action="/add-expense" method="post">
+          <div class="field">
+            <label class="label">Date</label>
+            <div class="control">
+              <input
+                class="input"
+                type="date"
+                name="date"
+                placeholder="Date input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                name="title"
+                placeholder="Title input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Amount</label>
+            <div class="control">
+              <input
+                class="input"
+                type="number"
+                name="amount"
+                placeholder="Amount input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit">Submit</button>
+            </div>
+            <div class="control">
+              <button class="button is-link is-light" type="reset">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>
