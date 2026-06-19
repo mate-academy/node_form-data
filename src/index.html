@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Expense</title>
+</head>
+<body>
+  <h1>Add Expense</h1>
+  <form id="expense-form">
+    <label>Title: <input type="text" name="title" required></label><br>
+    <label>Date: <input type="date" name="date" required></label><br>
+    <label>Amount: <input type="number" name="amount" required></label><br>
+    <button type="submit">Add Expense</button>
+  </form>
+
+  <h2>All Expenses</h2>
+  <div id="expenses"></div>
+
+  <script>
+    const form = document.getElementById('expense-form');
+    const expensesDiv = document.getElementById('expenses');
+
+    async function loadExpenses() {
+      try {
+        const res = await fetch('/db/expense.json');
+        const arr = await res.json();
+        expensesDiv.innerHTML = `<pre>${JSON.stringify(arr, null, 2)}</pre>`;
+      } catch {
+        expensesDiv.innerHTML = 'No expenses yet.';
+      }
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const data = {
+        title: form.title.value,
+        date: form.date.value,
+        amount: form.amount.value
+      };
+
+      await fetch('/submit-expense', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      form.reset();
+      loadExpenses();
+    });
+
+    loadExpenses();
+  </script>
+</body>
+</html>
