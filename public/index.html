@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node form data</title>
+  </head>
+  <body>
+    <h1>Hello, form data!</h1>
+    <form action="/add-expense" method="POST" enctype="multipart/form-data" name="expenseForm">
+      <input type="date" placeholder="date" name="date" />
+      <input type="text" placeholder="title" name="title" />
+      <input type="number" placeholder="amount" name="amount" />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
