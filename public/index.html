@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form data (with Node.js)</title>
+  </head>
+  <body>
+    <h1>Form data (with Node.js)</h1>
+
+    <form action="/add-expense" method="post">
+      <label for="date">Expense data</label>
+      <input type="date" name="date" id="date" />
+      <label for="title">Expense title</label>
+      <input type="text" name="title" id="title" />
+      <label for="amount">Expense amount</label>
+      <input type="number" name="amount" id="amount" />
+
+      <button type="submit">Sent to server</button>
+    </form>
+  </body>
+</html>
