@@ -5,13 +5,6 @@ const fs = require('fs/promises');
 
 function createServer() {
   return http.createServer(async (req, res) => {
-    if (req.method !== 'POST' && req.url === '/send') {
-      res.statusCode = 404;
-      res.end();
-
-      return;
-    }
-
     if (req.method === 'GET' && req.url === '/') {
       try {
         const page = await fs.readFile('./public/index.html');
@@ -30,11 +23,11 @@ function createServer() {
     if (req.method === 'POST' && req.url === '/add-expense') {
       const chunks = [];
 
-      await req.on('data', (chunk) => {
+      req.on('data', (chunk) => {
         chunks.push(chunk);
       });
 
-      await req.on('end', async () => {
+      req.on('end', async () => {
         const contentType = req.headers['content-type'];
         const text = Buffer.concat(chunks).toString();
         let paramsObj;
