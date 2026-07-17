@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      form {
+        box-sizing: border-box;
+        max-width: 300px;
+        margin: 2rem auto;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        border: 1px solid #888;
+
+        label {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        input {
+          width: 70%;
+          padding: 0.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav><a href="/">HOME</a></nav>
+    <form method="POST" action="/add-expense">
+      <label>date<input name="date" type="date" required /></label>
+      <label>title<input name="title" type="text" required /></label>
+      <label
+        >amount<input name="amount" type="number" min="0" required
+      /></label>
+      <button type="submit">Save</button>
+    </form>
+  </body>
+</html>
