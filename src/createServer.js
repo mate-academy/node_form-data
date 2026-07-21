@@ -46,11 +46,15 @@ function createServer() {
           return;
         }
 
-        const content = JSON.stringify({
-          date: date,
-          title: title,
-          amount: amount,
-        });
+        const content = JSON.stringify(
+          {
+            date: date,
+            title: title,
+            amount: amount,
+          },
+          null,
+          2,
+        );
 
         const filePath = `db/expense.json`;
 
@@ -63,7 +67,7 @@ function createServer() {
 
           res.statusCode = 200;
           res.setHeader('Content-Type', 'text/html; charset=utf-8');
-          res.end(`<pre>${content}</pre>`);
+          res.end(`<html><pre>${content}</pre></ html>`);
         });
       });
 
