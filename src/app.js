@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 'use strict';
+/* eslint-disable no-console */
 
 const { createServer } = require('./createServer');
 
